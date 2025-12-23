@@ -1,14 +1,7 @@
 import argparse
-import os
 
-from gpt_agent import *
-from prompt import *
-from task_info import *
-from test_gen_code import run, setup_task_config
-
-# Global variable definitions
-SCRIPT_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "script")
-CONFIGS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "task_config")
+from . import task_info as task_info_module
+from .test_gen_code import run, setup_task_config
 
 
 def run_code(task_info, las_error=None, message=None):
@@ -97,9 +90,11 @@ if __name__ == "__main__":
     # Get task info from task name string
     try:
         task_name = parser.parse_args().task_name.upper()
-        exec(f'now_task = {task_name}')
+        now_task = getattr(task_info_module, task_name)
+    except AttributeError:
+        raise ValueError(f"Invalid task name specified: {task_name}")
     except Exception as e:
-        raise ValueError("Invalid task name specified.") from e
+        raise ValueError("Error retrieving task info.") from e
 
     # Run main function
     main(now_task)

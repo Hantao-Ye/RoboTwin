@@ -4,9 +4,12 @@ import os
 import random
 import time
 from argparse import ArgumentParser
+from typing import List
 
-from agent import *
-from get_image_from_glb import *
+from pydantic import BaseModel, Field
+
+from .agent import generate
+from .get_image_from_glb import get_image_from_glb
 
 
 class subPart(BaseModel):

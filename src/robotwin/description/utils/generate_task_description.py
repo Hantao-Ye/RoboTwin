@@ -1,7 +1,10 @@
 import json
 from argparse import ArgumentParser
+from typing import List
 
-from agent import *
+from pydantic import BaseModel, Field
+
+from .agent import generate
 
 with open("./_generate_task_prompt.txt", "r") as f:
     system_prompt = f.read()

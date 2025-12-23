@@ -2,8 +2,9 @@ import base64
 import glob
 import os
 
-from gpt_agent import generate, kimi_api
 from openai import OpenAI
+
+from .gpt_agent import generate, kimi_api
 
 
 def observe_task_execution(episode_id, task_name, task_info, problematic_code=None, save_dir="./camera_images", camera_name=None, generate_dir_name=None):
