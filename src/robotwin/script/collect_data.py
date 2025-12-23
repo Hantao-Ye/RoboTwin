@@ -4,7 +4,8 @@ import sapien.core as sapien
 from sapien.render import clear_cache
 from collections import OrderedDict
 import pdb
-from robotwin.envs import *
+from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH, ASSETS_PATH, DESCRIPTION_PATH
+from robotwin.envs.utils import UnStableError
 import yaml
 import importlib
 import json

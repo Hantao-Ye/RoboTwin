@@ -1,33 +1,28 @@
 # import packages and module here
 import sys
+import os
+import traceback
+import pathlib
+from datetime import datetime
+import importlib
 
 import torch
 import sapien.core as sapien
-import traceback
-import os
 import numpy as np
-from robotwin.envs import *
+import yaml
 from hydra import initialize, compose
 from omegaconf import OmegaConf
 from hydra.core.hydra_config import HydraConfig
 from hydra import main as hydra_main
-import pathlib
-from omegaconf import OmegaConf
-
-import yaml
-from datetime import datetime
-import importlib
-
-from hydra import initialize, compose
-from omegaconf import OmegaConf
-from datetime import datetime
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
 
 sys.path.append(os.path.join(parent_directory, '3D-Diffusion-Policy'))
 
-from dp3_policy import *
+# from dp3_policy import *
+import dp3_policy # type: ignore
+DP3 = dp3_policy.DP3
 
 
 def encode_obs(observation):  # Post-Process Observation

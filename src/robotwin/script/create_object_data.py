@@ -9,10 +9,14 @@ import transforms3d as t3d
 from threading import Thread, Lock
 import trimesh
 import trimesh.bounds
+import json
+import os
+import re
+from typing import Literal
 
 import sys
 
-from robotwin.envs.utils import *
+from robotwin.envs.utils import Actor, ArticulationActor
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 
 import sapien

@@ -6,12 +6,15 @@ from copy import deepcopy
 import transforms3d as t3d
 from threading import Thread
 import readline
+import json
+import os
+import yaml
 
 import sys
 
 import trimesh.bounds
 
-from robotwin.envs.utils import *
+from robotwin.envs.utils import rand_create_cluttered_actor, rand_create_actor, create_actor, create_obj
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 import sapien.core as sapien
 from sapien.utils.viewer import Viewer
@@ -923,9 +926,6 @@ class Helper:
         self.run(no_step=True)
         self.take_picture('./script/camera.png')
         self.block()
-
-
-import os
 
 
 def cpy():

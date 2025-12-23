@@ -37,6 +37,12 @@ dependencies = [
     "av",
     "matplotlib",
     "ffmpeg-python",
+    "hydra-core",
+    "omegaconf",
+    "PyYAML",
+    "dill",
+    "einops",
+    "diffusers",
     "pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@stable",
     "nvidia-curobo @ git+https://github.com/NVlabs/curobo.git"
 ]
