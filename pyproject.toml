@@ -47,8 +47,8 @@ packages = ["src/robotwin"]
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.uv]
-dev-dependencies = []
+[dependency-groups]
+dev = []
 
 [tool.uv.extra-build-dependencies]
 pytorch3d = ["torch"]
