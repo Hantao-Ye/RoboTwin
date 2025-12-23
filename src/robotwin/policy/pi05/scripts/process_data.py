@@ -1,12 +1,12 @@
-import sys
 
+import argparse
+import json
 import os
+
+import cv2
 import h5py
 import numpy as np
-import pickle
-import cv2
-import argparse
-import yaml, json
+import yaml
 
 
 def load_hdf5(dataset_path):

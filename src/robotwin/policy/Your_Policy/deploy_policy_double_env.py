@@ -1,4 +1,3 @@
-import numpy as np
 try:
     # policy_env
     pass

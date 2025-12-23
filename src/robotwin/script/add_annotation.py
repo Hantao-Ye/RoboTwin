@@ -1,7 +1,7 @@
 import ast
-import tokenize
 import io
 import re
+import tokenize
 
 
 def remove_comments_and_docstrings(source):
@@ -195,6 +195,7 @@ def play_once(self):
 import os
 import time
 import traceback
+
 from openai import OpenAI
 
 
@@ -283,8 +284,8 @@ def main(file_path, max_try=5, verbose=True):
             f.write(f"Error processing {file_path}: Exceeded maximum retries.\n")
 
 
-from threading import Thread
 from pathlib import Path
+from threading import Thread
 
 
 def batch(batch_size=5, root="./envs"):

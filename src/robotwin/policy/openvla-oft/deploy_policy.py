@@ -1,15 +1,13 @@
-import os
-import numpy as np
 from dataclasses import dataclass
 
-from prismatic.vla.constants import NUM_ACTIONS_CHUNK, PROPRIO_DIM
 from experiments.robot.openvla_utils import (
-    get_vla,
-    get_processor,
     get_action_head,
+    get_processor,
     get_proprio_projector,
+    get_vla,
     get_vla_action,
 )
+from prismatic.vla.constants import NUM_ACTIONS_CHUNK, PROPRIO_DIM
 
 
 @dataclass

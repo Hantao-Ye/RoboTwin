@@ -1,11 +1,11 @@
 import torch
-import cv2
-from PIL import Image
-from transformers import AutoModelForMaskedLM, AutoTokenizer, AutoModel, AutoConfig, AutoModelForMaskedLM
-import numpy as np
+from transformers import AutoConfig
+
 CAMERA_VIEWS=['cam_bottom', 'cam_top', 'cam_left_wrist', 'cam_right_wrist']
 
 from dex_vla.model_load_utils import load_model_for_eval
+
+
 class paligemma_vla_policy:
     def __init__(self, policy_config, data_args=None):
         super(paligemma_vla_policy).__init__()

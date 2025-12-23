@@ -1,6 +1,6 @@
 from ._base_task import Base_Task
-from .utils import *
 from ._GLOBAL_CONFIGS import *
+from .utils import *
 
 
 class press_stapler(Base_Task):

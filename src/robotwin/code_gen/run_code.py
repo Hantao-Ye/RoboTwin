@@ -1,13 +1,10 @@
-import os
-import yaml
-import sys
-import importlib
 import argparse
+import os
 
 from gpt_agent import *
 from prompt import *
 from task_info import *
-from test_gen_code import setup_task_config, run
+from test_gen_code import run, setup_task_config
 
 # Global variable definitions
 SCRIPT_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "script")

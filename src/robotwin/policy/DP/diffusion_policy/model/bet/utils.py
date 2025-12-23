@@ -1,15 +1,12 @@
 import os
-
 from collections import OrderedDict
-from typing import List, Optional
 
 import einops
 import numpy as np
 import torch
 import torch.nn as nn
-
-from torch.utils.data import random_split
 import wandb
+from torch.utils.data import random_split
 
 
 def mlp(input_dim, hidden_dim, output_dim, hidden_depth, output_mod=None):

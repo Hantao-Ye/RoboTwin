@@ -1,9 +1,7 @@
+from typing import Optional
+
 import torch
-import numpy as np
-
 import tqdm
-
-from typing import Optional, Tuple, Union
 from diffusion_policy.model.common.dict_of_tensor_mixin import DictOfTensorMixin
 
 

@@ -1,10 +1,11 @@
-import os
-import sys
 import glob
+import os
 import zipfile
-import shutil
+
 from huggingface_hub import snapshot_download
+
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+
 
 def download_assets():
     print(f"Downloading assets to {ASSETS_PATH}...")

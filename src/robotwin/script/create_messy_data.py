@@ -1,31 +1,24 @@
-import trimesh
-import importlib
-import numpy as np
-from pathlib import Path
-from copy import deepcopy
-import transforms3d as t3d
-from threading import Thread
-import readline
 import json
 import os
-import yaml
+import re
+from pathlib import Path
 
-import sys
-
-import trimesh.bounds
-
-from robotwin.envs.utils import rand_create_cluttered_actor, rand_create_actor, create_actor, create_obj
-from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+import numpy as np
 import sapien.core as sapien
+import transforms3d as t3d
+import yaml
+from PIL import Image
+from sapien import Pose
 from sapien.utils.viewer import Viewer
 from tqdm import tqdm
-from PIL import Image
 
-import re
-import time
-from typing import List, Literal
-
-from sapien import Pose
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+from robotwin.envs.utils import (
+    create_actor,
+    create_obj,
+    rand_create_actor,
+    rand_create_cluttered_actor,
+)
 
 # obj square
 CAMERA_POSE = Pose([0, 0.134123, 0.96], [0.684988, 0.174248, 0.173926, -0.685696])

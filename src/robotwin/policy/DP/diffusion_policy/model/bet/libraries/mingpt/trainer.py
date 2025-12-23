@@ -3,16 +3,13 @@ Simple training loop; Boilerplate that could apply to any arbitrary neural netwo
 so nothing in this file really has anything to do with GPT specifically.
 """
 
-import math
 import logging
+import math
 
-from tqdm import tqdm
 import numpy as np
-
 import torch
-import torch.optim as optim
-from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data.dataloader import DataLoader
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,6 @@
 # import packages and module here
-import sys, os
+import os
+
 from .model import *
 
 current_file_path = os.path.abspath(__file__)

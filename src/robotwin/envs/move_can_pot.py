@@ -1,8 +1,8 @@
+
+import sapien
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
-import math
-from copy import deepcopy
 
 
 class move_can_pot(Base_Task):

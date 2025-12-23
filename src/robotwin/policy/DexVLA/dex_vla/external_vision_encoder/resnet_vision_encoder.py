@@ -1,8 +1,10 @@
-import torch.nn as nn
-from .resnet_backbone import build_backbone
-from .modules import SpatialSoftmax
 import numpy as np
 import torch
+import torch.nn as nn
+
+from .modules import SpatialSoftmax
+from .resnet_backbone import build_backbone
+
 
 class ResNetEncoder(nn.Module):
     def __init__(self, len_cameras=3, use_film=False):

@@ -1,11 +1,15 @@
-from dataset import find_all_hdf5, flatten_list
 import os
+
+from dataset import find_all_hdf5, flatten_list
+
 path = "/media/rl/ADDS-4/"
-import torch
 import h5py
 import numpy as np
-from tqdm import tqdm
+import torch
 from PIL import Image
+from tqdm import tqdm
+
+
 def get_norm_stats(dataset_path_list, rank0_print=print):
     all_qpos_data = []
     all_action_data = []

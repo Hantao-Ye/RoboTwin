@@ -1,11 +1,12 @@
-from typing import Union, Dict, Optional
-import os
 import math
 import numbers
-import zarr
+import os
+from functools import cached_property
+from typing import Dict, Optional, Union
+
 import numcodecs
 import numpy as np
-from functools import cached_property
+import zarr
 
 
 def check_chunks_compatible(chunks: tuple, shape: tuple):

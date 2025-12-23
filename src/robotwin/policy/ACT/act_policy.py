@@ -1,10 +1,11 @@
-import torch.nn as nn
 import os
-import torch
-import numpy as np
 import pickle
-from torch.nn import functional as F
+
+import numpy as np
+import torch
+import torch.nn as nn
 import torchvision.transforms as transforms
+from torch.nn import functional as F
 
 try:
     from detr.main import (

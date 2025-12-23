@@ -1,4 +1,5 @@
 import numpy as np
+
 try:
     from .dp_model import DP
 except:

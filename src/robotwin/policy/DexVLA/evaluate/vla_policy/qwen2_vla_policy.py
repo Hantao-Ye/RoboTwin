@@ -1,12 +1,14 @@
+import numpy as np
 import torch
-
 from PIL import Image
 from qwen_vl_utils import fetch_image
-from transformers import AutoModelForMaskedLM, AutoTokenizer, AutoModel, AutoConfig, AutoModelForMaskedLM
-import numpy as np
+from transformers import AutoConfig
+
 CAMERA_VIEWS=['cam_bottom', 'cam_top', 'cam_left_wrist', 'cam_right_wrist']
 
 from dex_vla.model_load_utils import load_model_for_eval
+
+
 class qwen2_vla_policy:
     def __init__(self, policy_config, data_args=None):
         super(qwen2_vla_policy).__init__()

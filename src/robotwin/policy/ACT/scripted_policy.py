@@ -1,11 +1,9 @@
-import numpy as np
+import IPython
 import matplotlib.pyplot as plt
-from pyquaternion import Quaternion
-
+import numpy as np
 from constants import SIM_TASK_CONFIGS
 from ee_sim_env import make_ee_sim_env
-
-import IPython
+from pyquaternion import Quaternion
 
 e = IPython.embed
 

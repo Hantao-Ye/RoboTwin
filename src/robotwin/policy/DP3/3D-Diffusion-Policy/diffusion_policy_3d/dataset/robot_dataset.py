@@ -1,27 +1,28 @@
-import sys, os
+import os
+import sys
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
 sys.path.append(os.path.join(parent_directory, '..'))
 sys.path.append(os.path.join(parent_directory, '../..'))
 
-from typing import Dict
-import torch
-import numpy as np
 import copy
+from typing import Dict
+
+import numpy as np
+import torch
+
 from diffusion_policy_3d.common.pytorch_util import dict_apply
 from diffusion_policy_3d.common.replay_buffer import ReplayBuffer
 from diffusion_policy_3d.common.sampler import (
     SequenceSampler,
-    get_val_mask,
     downsample_mask,
-)
-from diffusion_policy_3d.model.common.normalizer import (
-    LinearNormalizer,
-    SingleFieldLinearNormalizer,
+    get_val_mask,
 )
 from diffusion_policy_3d.dataset.base_dataset import BaseDataset
-import pdb
+from diffusion_policy_3d.model.common.normalizer import (
+    LinearNormalizer,
+)
 
 
 class RobotDataset(BaseDataset):

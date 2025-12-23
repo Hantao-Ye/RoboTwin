@@ -1,6 +1,6 @@
 from typing import Dict
+
 import torch
-import torch.nn as nn
 from diffusion_policy_3d.model.common.module_attr_mixin import ModuleAttrMixin
 from diffusion_policy_3d.model.common.normalizer import LinearNormalizer
 

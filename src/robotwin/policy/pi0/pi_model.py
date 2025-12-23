@@ -3,25 +3,10 @@
 """
 #!/usr/bin/python3
 """
-import json
-import sys
-import jax
 import numpy as np
-from openpi.models import model as _model
-from openpi.policies import aloha_policy
-from openpi.policies import policy_config as _policy_config
-from openpi.shared import download
-from openpi.training import config as _config
-from openpi.training import data_loader as _data_loader
 
-import cv2
-from PIL import Image
-
-from openpi.models import model as _model
 from openpi.policies import policy_config as _policy_config
-from openpi.shared import download
 from openpi.training import config as _config
-from openpi.training import data_loader as _data_loader
 
 
 class PI0:

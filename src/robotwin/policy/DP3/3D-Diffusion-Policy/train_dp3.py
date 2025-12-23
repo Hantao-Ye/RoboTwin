@@ -1,19 +1,20 @@
 if __name__ == "__main__":
-    import sys
     import os
     import pathlib
+    import sys
 
     ROOT_DIR = str(pathlib.Path(__file__).parent.parent)
     sys.path.append(ROOT_DIR)
     os.chdir(ROOT_DIR)
 
-import os, sys
-import pdb
+import os
+import pathlib
+import sys
+
+import dill
 import hydra
 import torch
-import dill
 from omegaconf import OmegaConf
-import pathlib
 
 DP3_ROOT = str(pathlib.Path(__file__).parent.parent)
 
@@ -21,29 +22,25 @@ sys.path.append(DP3_ROOT)
 sys.path.append(os.path.join(DP3_ROOT, '3D-Diffusion-Policy'))
 sys.path.append(os.path.join(DP3_ROOT, '3D-Diffusion-Policy', 'diffusion_policy_3d'))
 
-from torch.utils.data import DataLoader
 import copy
-
-import wandb
-import tqdm
-import numpy as np
-from termcolor import cprint
-import shutil
-import time
-import threading
+import random
 import sys
+import threading
+import time
 
-from hydra.core.hydra_config import HydraConfig
-from diffusion_policy_3d.policy.dp3 import DP3
-from diffusion_policy_3d.dataset.base_dataset import BaseDataset
-from diffusion_policy_3d.env_runner.base_runner import BaseRunner
-from diffusion_policy_3d.env_runner.robot_runner import RobotRunner
+import numpy as np
+import tqdm
+import wandb
 from diffusion_policy_3d.common.checkpoint_util import TopKCheckpointManager
 from diffusion_policy_3d.common.pytorch_util import dict_apply, optimizer_to
-from diffusion_policy_3d.model.diffusion.ema_model import EMAModel
+from diffusion_policy_3d.dataset.base_dataset import BaseDataset
+from diffusion_policy_3d.env_runner.robot_runner import RobotRunner
 from diffusion_policy_3d.model.common.lr_scheduler import get_scheduler
-
-import pdb, random
+from diffusion_policy_3d.model.diffusion.ema_model import EMAModel
+from diffusion_policy_3d.policy.dp3 import DP3
+from hydra.core.hydra_config import HydraConfig
+from termcolor import cprint
+from torch.utils.data import DataLoader
 
 OmegaConf.register_new_resolver("eval", eval, replace=True)
 

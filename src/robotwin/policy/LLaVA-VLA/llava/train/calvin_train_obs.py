@@ -14,32 +14,37 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import os
 import copy
-from dataclasses import dataclass, field
 import json
 import logging
+import os
 import pathlib
-from typing import Dict, Optional, Sequence, List
-# import librosa
+from dataclasses import dataclass, field
+from functools import partial
+from typing import Dict, Optional, Sequence
 
-import torch
-
-import transformers
-from transformers import AddedToken
 import tokenizers
 
-from llava.constants import IGNORE_INDEX, IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN, DEFAULT_AUDIO_TOKEN, DEFAULT_GOAL_TOKEN
-from torch.utils.data import Dataset
-from llava.train.llava_trainer import LLaVATrainer
-
+# import librosa
+import torch
+import transformers
 from llava import conversation as conversation_lib
-from llava.model import *
-from llava.mm_utils import tokenizer_image_token, tokenizer_audio_token, tokenizer_image_audio_token
 from llava.action_tokenizer import ActionTokenizer, encode_actions, encode_robot_obs
-
+from llava.constants import (
+    DEFAULT_IM_END_TOKEN,
+    DEFAULT_IM_START_TOKEN,
+    DEFAULT_IMAGE_TOKEN,
+    IGNORE_INDEX,
+)
+from llava.mm_utils import (
+    tokenizer_audio_token,
+    tokenizer_image_audio_token,
+    tokenizer_image_token,
+)
+from llava.model import *
+from llava.train.llava_trainer import LLaVATrainer
 from PIL import Image
-from functools import partial
+from torch.utils.data import Dataset
 
 local_rank = None
 
@@ -50,6 +55,7 @@ def rank0_print(*args):
 
 
 from packaging import version
+
 IS_TOKENIZER_GREATER_THAN_0_14 = version.parse(tokenizers.__version__) >= version.parse('0.14')
 
 

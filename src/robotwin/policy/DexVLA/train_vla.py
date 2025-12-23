@@ -1,7 +1,5 @@
-import gc
-import pickle
-
 import os
+import pickle
 import time
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -9,24 +7,34 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ['DEVICE'] = "cuda"
 os.environ["WANDB_DISABLED"] = "true"
 
-from data_utils.dataset import load_data  # data functions
-from data_utils.dataset import compute_dict_mean, set_seed  # helper functions
-from policy_heads import *
+import IPython
+
 # from data_utils.lerobot_dataset import load_data
 from aloha_scripts.constants import TASK_CONFIGS
-from dex_vla.utils.robot_data_processor import DexVLAProcess
-# from paligemma_vla.utils.robot_data_processor import PaliGemmaVLAProcess
-from transformers import AutoConfig, AutoModel, AutoProcessor
-from dex_vla import DexVLATrainer
 from data_utils.data_collator import *
+from data_utils.dataset import (  # helper functions
+    load_data,  # data functions
+    set_seed,
+)
+from dex_vla import DexVLATrainer
+from dex_vla.utils.robot_data_processor import DexVLAProcess
+from policy_heads import *
 
-import IPython
+# from paligemma_vla.utils.robot_data_processor import PaliGemmaVLAProcess
+from transformers import AutoConfig, AutoProcessor
+
 e = IPython.embed
-from data_utils.data_collator import DexVLADataCollatorForSupervisedDataset, PaliGemmaVLADataCollatorForSupervisedDataset
-from dex_vla import model_load_utils as ml_utils
 import torch
+from data_utils.data_collator import (
+    DexVLADataCollatorForSupervisedDataset,
+    PaliGemmaVLADataCollatorForSupervisedDataset,
+)
+from dex_vla import model_load_utils as ml_utils
+
 local_rank = None
 from aloha_scripts.utils import *
+
+
 #  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>parameters<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 @dataclass
 class ActionHeadArguments:

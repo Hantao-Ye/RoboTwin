@@ -1,23 +1,21 @@
-import pickle
 import os
-
-import time
+import pickle
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ['DEVICE'] = "cuda"
 os.environ["WANDB_DISABLED"] = "true"
 
-import torch
-from policy_heads import *
-from data_utils.dataset import set_seed, load_data
+from dataclasses import asdict, dataclass, field
 
-from vla import *
-from aloha_scripts.utils import *
+import torch
 from aloha_scripts.constants import TASK_CONFIGS
-from transformers import AutoConfig, AutoProcessor, AutoTokenizer
+from aloha_scripts.utils import *
 from data_utils.data_collator import DataCollatorForSupervisedDataset
+from data_utils.dataset import load_data, set_seed
 from data_utils.robot_data_processor import InternVL3Process
-from dataclasses import dataclass, field, asdict
+from policy_heads import *
+from transformers import AutoConfig, AutoTokenizer
+from vla import *
 
 local_rank = None
 

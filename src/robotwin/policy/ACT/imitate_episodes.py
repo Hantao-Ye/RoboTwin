@@ -3,31 +3,33 @@ import os
 # Set rendering backend for MuJoCo
 os.environ["MUJOCO_GL"] = "egl"
 
-import torch
-import numpy as np
-import pickle
 import argparse
+import pickle
 
 import matplotlib
+import numpy as np
+import torch
 
 matplotlib.use("Agg")
 
-import matplotlib.pyplot as plt
 from copy import deepcopy
-from tqdm import tqdm
-from einops import rearrange
-
-from constants import DT
-from constants import PUPPET_GRIPPER_JOINT_OPEN
-from utils import load_data  # data functions
-from utils import sample_box_pose, sample_insertion_pose  # robot functions
-from utils import compute_dict_mean, set_seed, detach_dict  # helper functions
-from act_policy import ACTPolicy, CNNMLPPolicy
-from visualize_episodes import save_videos
-
-from sim_env import BOX_POSE
 
 import IPython
+import matplotlib.pyplot as plt
+from act_policy import ACTPolicy, CNNMLPPolicy
+from constants import DT, PUPPET_GRIPPER_JOINT_OPEN
+from einops import rearrange
+from sim_env import BOX_POSE
+from tqdm import tqdm
+from utils import (  # robot functions  # helper functions
+    compute_dict_mean,
+    detach_dict,
+    load_data,  # data functions
+    sample_box_pose,
+    sample_insertion_pose,
+    set_seed,
+)
+from visualize_episodes import save_videos
 
 e = IPython.embed
 
@@ -199,8 +201,8 @@ def eval_bc(config, ckpt_name, save_episode=True):
 
     # load environment
     if real_robot:
-        from aloha_scripts.robot_utils import move_grippers  # requires aloha
         from aloha_scripts.real_env import make_real_env  # requires aloha
+        from aloha_scripts.robot_utils import move_grippers  # requires aloha
 
         env = make_real_env(init_node=True)
         env_max_reward = 0

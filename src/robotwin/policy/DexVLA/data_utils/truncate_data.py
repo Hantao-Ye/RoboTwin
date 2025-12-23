@@ -2,12 +2,12 @@
 Example usage:
 $ python3 script/compress_data.py --dataset_dir /scr/lucyshi/dataset/aloha_test
 """
-import os
-import h5py
-import cv2
-import numpy as np
 import argparse
-from tqdm import tqdm
+import os
+
+import cv2
+import h5py
+import numpy as np
 
 # Constants
 DT = 0.02

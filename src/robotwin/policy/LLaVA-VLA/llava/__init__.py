@@ -1,1 +1,3 @@
-from .model import LlavaLlamaForCausalLM, AsrLlavaForCausalLM
+from .model import AsrLlavaForCausalLM, LlavaLlamaForCausalLM
+
+__all__ = ["AsrLlavaForCausalLM", "LlavaLlamaForCausalLM"]

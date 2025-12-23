@@ -1,6 +1,7 @@
 from typing import Optional
-import numpy as np
+
 import numba
+import numpy as np
 from diffusion_policy_3d.common.replay_buffer import ReplayBuffer
 
 

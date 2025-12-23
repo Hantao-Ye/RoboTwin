@@ -16,8 +16,9 @@ import torch
 import torch.distributed as dist
 import torch.nn as nn
 import tqdm
+import wandb
 from accelerate import PartialState
-from huggingface_hub import HfApi, snapshot_download
+from huggingface_hub import snapshot_download
 from peft import LoraConfig, PeftModel, get_peft_model
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
@@ -31,14 +32,11 @@ from transformers import (
 )
 from transformers.modeling_outputs import CausalLMOutputWithPast
 
-import wandb
-
 from experiments.robot.openvla_utils import (
     check_model_logic_mismatch,
     model_is_on_hf_hub,
     update_auto_map,
 )
-
 from prismatic.extern.hf.configuration_prismatic import OpenVLAConfig
 from prismatic.extern.hf.modeling_prismatic import OpenVLAForActionPrediction
 from prismatic.extern.hf.processing_prismatic import (
@@ -1454,6 +1452,7 @@ def set_seed(seed: int) -> None:
         None
     """
     import random
+
     import numpy as np
     import torch
 

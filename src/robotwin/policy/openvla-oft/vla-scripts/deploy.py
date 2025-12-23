@@ -4,7 +4,6 @@ deploy.py
 Starts VLA server which the client can query to get robot actions.
 """
 
-import os.path
 
 # ruff: noqa: E402
 import json_numpy
@@ -12,31 +11,29 @@ import json_numpy
 json_numpy.patch()
 import json
 import logging
-import numpy as np
 import traceback
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Union
 
 import draccus
-import torch
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from PIL import Image
-from transformers import AutoModelForVision2Seq, AutoProcessor
 
 from experiments.robot.openvla_utils import (
-    get_vla,
-    get_vla_action,
     get_action_head,
     get_processor,
     get_proprio_projector,
+    get_vla,
+    get_vla_action,
 )
 from experiments.robot.robot_utils import (
     get_image_resize_size,
 )
-from prismatic.vla.constants import ACTION_DIM, ACTION_TOKEN_BEGIN_IDX, IGNORE_INDEX, NUM_ACTIONS_CHUNK, PROPRIO_DIM, STOP_INDEX
+from prismatic.vla.constants import (
+    PROPRIO_DIM,
+)
 
 
 def get_openvla_prompt(instruction: str, openvla_path: Union[str, Path]) -> str:

@@ -1,6 +1,6 @@
+import os
 import sys
 import warnings
-import os
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 warnings.simplefilter(action="ignore", category=UserWarning)
@@ -8,20 +8,13 @@ current_file_path = os.path.abspath(__file__)
 parent_dir = os.path.dirname(current_file_path)
 
 sys.path.append(os.path.join(parent_dir, "../../tools"))
-import numpy as np
-import pdb
-import json
-import torch
-import sapien.core as sapien
-from sapien.utils.viewer import Viewer
-import gymnasium as gym
-import toppra as ta
-import transforms3d as t3d
-from collections import OrderedDict
-
+import os
 import sys
 import warnings
-import os
+
+import gymnasium as gym
+import sapien.core as sapien
+import toppra as ta
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 warnings.simplefilter(action="ignore", category=UserWarning)
@@ -29,16 +22,9 @@ current_file_path = os.path.abspath(__file__)
 parent_dir = os.path.dirname(current_file_path)
 
 sys.path.append(os.path.join(parent_dir, "../../tools"))
-import numpy as np
-import pdb
-import json
-import torch
-import sapien.core as sapien
-from sapien.utils.viewer import Viewer
 import gymnasium as gym
+import sapien.core as sapien
 import toppra as ta
-import transforms3d as t3d
-from collections import OrderedDict
 
 
 class Sapien_TEST(gym.Env):

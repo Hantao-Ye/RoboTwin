@@ -8,34 +8,28 @@ from pathlib import Path
 # get current workspace
 current_file = Path(__file__)
 
-import json
 import sys
 
 parent_dir = current_file.parent
 sys.path.append(str(parent_dir))
 
 import os
-
-import argparse
-
-import threading
+import sys
 import time
-import yaml
 from collections import deque
 
+import cv2
 import numpy as np
 import torch
+import yaml
 from PIL import Image as PImage
-import cv2
-
-import sys, os
 
 # get current workspace
 current_file = Path(__file__)
 sys.path.append(os.path.join(current_file.parent, "models"))
 
-from scripts.agilex_model import create_model
 from multimodal_encoder.t5_encoder import T5Embedder
+from scripts.agilex_model import create_model
 
 global_path = parent_dir.parent
 

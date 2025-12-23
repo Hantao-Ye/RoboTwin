@@ -1,9 +1,6 @@
-import numpy as np
 import tensorflow as tf
 import yaml
-
 from data.preprocess import generate_json_state
-from configs.state_vec import STATE_VEC_IDX_MAPPING
 
 # Read the config
 with open("configs/base.yaml", "r") as file:

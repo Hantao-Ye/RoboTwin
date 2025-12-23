@@ -1,7 +1,8 @@
+
+import sapien
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
-from copy import deepcopy
 
 
 class put_bottles_dustbin(Base_Task):

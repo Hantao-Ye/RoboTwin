@@ -1,8 +1,9 @@
-from typing import Tuple
 from dataclasses import dataclass
-import numpy as np
 from multiprocessing.managers import SharedMemoryManager
-from atomics import atomicview, MemoryOrder, UINT
+from typing import Tuple
+
+import numpy as np
+from atomics import UINT, MemoryOrder, atomicview
 
 
 @dataclass

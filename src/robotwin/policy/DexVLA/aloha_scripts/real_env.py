@@ -1,18 +1,31 @@
-import time
-import numpy as np
 import collections
-import matplotlib.pyplot as plt
-import dm_env
+import time
 
-from lerobot_constants import DT, START_ARM_POSE, MASTER_GRIPPER_JOINT_NORMALIZE_FN, PUPPET_GRIPPER_JOINT_UNNORMALIZE_FN
-from lerobot_constants import PUPPET_GRIPPER_POSITION_NORMALIZE_FN, PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN
-from lerobot_constants import PUPPET_GRIPPER_JOINT_OPEN, PUPPET_GRIPPER_JOINT_CLOSE
-from robot_utils import Recorder, ImageRecorder
-from robot_utils import setup_master_bot, setup_puppet_bot, move_arms, move_grippers
+import dm_env
+import IPython
+import matplotlib.pyplot as plt
+import numpy as np
 from interbotix_xs_modules.arm import InterbotixManipulatorXS
 from interbotix_xs_msgs.msg import JointSingleCommand
+from lerobot_constants import (
+    DT,
+    MASTER_GRIPPER_JOINT_NORMALIZE_FN,
+    PUPPET_GRIPPER_JOINT_CLOSE,
+    PUPPET_GRIPPER_JOINT_OPEN,
+    PUPPET_GRIPPER_JOINT_UNNORMALIZE_FN,
+    PUPPET_GRIPPER_POSITION_NORMALIZE_FN,
+    PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN,
+    START_ARM_POSE,
+)
+from robot_utils import (
+    ImageRecorder,
+    Recorder,
+    move_arms,
+    move_grippers,
+    setup_master_bot,
+    setup_puppet_bot,
+)
 
-import IPython
 e = IPython.embed
 
 class RealEnv:

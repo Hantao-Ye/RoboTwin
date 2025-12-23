@@ -1,18 +1,21 @@
-import numpy as np
-import os
 import collections
+import os
+
+import IPython
 import matplotlib.pyplot as plt
+import numpy as np
+from constants import (
+    DT,
+    MASTER_GRIPPER_POSITION_NORMALIZE_FN,
+    PUPPET_GRIPPER_POSITION_NORMALIZE_FN,
+    PUPPET_GRIPPER_POSITION_UNNORMALIZE_FN,
+    PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN,
+    START_ARM_POSE,
+    XML_DIR,
+)
 from dm_control import mujoco
 from dm_control.rl import control
 from dm_control.suite import base
-
-from constants import DT, XML_DIR, START_ARM_POSE
-from constants import PUPPET_GRIPPER_POSITION_UNNORMALIZE_FN
-from constants import MASTER_GRIPPER_POSITION_NORMALIZE_FN
-from constants import PUPPET_GRIPPER_POSITION_NORMALIZE_FN
-from constants import PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN
-
-import IPython
 
 e = IPython.embed
 

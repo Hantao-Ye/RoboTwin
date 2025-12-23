@@ -1,19 +1,21 @@
-import numpy as np
 import collections
 import os
 
-from constants import DT, XML_DIR, START_ARM_POSE
-from constants import PUPPET_GRIPPER_POSITION_CLOSE
-from constants import PUPPET_GRIPPER_POSITION_UNNORMALIZE_FN
-from constants import PUPPET_GRIPPER_POSITION_NORMALIZE_FN
-from constants import PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN
-
-from utils import sample_box_pose, sample_insertion_pose
+import IPython
+import numpy as np
+from constants import (
+    DT,
+    PUPPET_GRIPPER_POSITION_CLOSE,
+    PUPPET_GRIPPER_POSITION_NORMALIZE_FN,
+    PUPPET_GRIPPER_POSITION_UNNORMALIZE_FN,
+    PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN,
+    START_ARM_POSE,
+    XML_DIR,
+)
 from dm_control import mujoco
 from dm_control.rl import control
 from dm_control.suite import base
-
-import IPython
+from utils import sample_box_pose, sample_insertion_pose
 
 e = IPython.embed
 

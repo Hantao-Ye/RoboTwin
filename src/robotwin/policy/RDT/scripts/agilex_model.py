@@ -1,13 +1,12 @@
-import os, sys
+import os
+import sys
+from pathlib import Path
 
 import numpy as np
 import torch
+from configs.state_vec import STATE_VEC_IDX_MAPPING
 from PIL import Image
 from torchvision import transforms
-
-from configs.state_vec import STATE_VEC_IDX_MAPPING
-
-from pathlib import Path
 
 # get current workspace
 current_file = Path(__file__)

@@ -1,18 +1,14 @@
-import sys
-
-import sapien.core as sapien
-from sapien.render import clear_cache
-from collections import OrderedDict
-import pdb
-from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH, ASSETS_PATH, DESCRIPTION_PATH
-from robotwin.envs.utils import UnStableError
-import yaml
 import importlib
 import json
-import traceback
 import os
+import sys
 import time
 from argparse import ArgumentParser
+
+import yaml
+
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH, CONFIGS_PATH, DESCRIPTION_PATH
+from robotwin.envs.utils import UnStableError
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)

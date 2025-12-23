@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from transformers import AutoConfig, AutoImageProcessor, AutoModel, Dinov2Model
+from transformers import AutoConfig, AutoImageProcessor, AutoModel
 
 
 class DinoV2VisionTower(nn.Module):

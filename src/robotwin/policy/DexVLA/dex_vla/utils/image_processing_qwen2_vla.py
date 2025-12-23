@@ -23,7 +23,6 @@ import math
 from typing import Dict, List, Optional, Union
 
 import numpy as np
-
 from transformers.image_processing_utils import BaseImageProcessor, BatchFeature
 from transformers.image_transforms import (
     convert_to_rgb,
@@ -47,7 +46,6 @@ from transformers.image_utils import (
     validate_preprocess_arguments,
 )
 from transformers.utils import TensorType, is_vision_available, logging
-
 
 logger = logging.get_logger(__name__)
 
@@ -458,5 +456,6 @@ class Qwen2VLImageProcessor(BaseImageProcessor):
         return BatchFeature(data=data, tensor_type=return_tensors)
 
 from transformers import AutoProcessor
+
 AutoProcessor.register("Qwen2VLImageProcessor", Qwen2VLImageProcessor)
 

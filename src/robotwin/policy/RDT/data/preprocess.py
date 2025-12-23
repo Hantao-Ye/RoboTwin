@@ -2,9 +2,8 @@ import json
 
 import tensorflow as tf
 import yaml
-
-from data.preprocess_scripts import *
 from configs.state_vec import STATE_VEC_IDX_MAPPING, STATE_VEC_LEN
+from data.preprocess_scripts import *
 from data.utils import capitalize_and_period
 
 # The dataset without state

@@ -1,14 +1,12 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import einops
-import diffusion_policy.model.bet.latent_generators.latent_generator as latent_generator
+from typing import Optional, Tuple
 
+import diffusion_policy.model.bet.latent_generators.latent_generator as latent_generator
 import diffusion_policy.model.bet.libraries.mingpt.model as mingpt_model
 import diffusion_policy.model.bet.libraries.mingpt.trainer as mingpt_trainer
+import einops
+import torch
+import torch.nn.functional as F
 from diffusion_policy.model.bet.libraries.loss_fn import FocalLoss, soft_cross_entropy
-
-from typing import Optional, Tuple
 
 
 class MinGPT(latent_generator.AbstractLatentGenerator):

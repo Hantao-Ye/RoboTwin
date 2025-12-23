@@ -1,8 +1,7 @@
-from typing import Iterator, Tuple, Any
-
 import glob
+from typing import Any, Iterator, Tuple
+
 import numpy as np
-import tensorflow as tf
 import tensorflow_datasets as tfds
 import tensorflow_hub as hub
 

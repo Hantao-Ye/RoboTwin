@@ -1,15 +1,11 @@
-import wandb
+from queue import deque
+
+import diffusion_policy_3d.common.logger_util as logger_util
 import numpy as np
 import torch
-import tqdm
-
-from diffusion_policy_3d.policy.base_policy import BasePolicy
 from diffusion_policy_3d.common.pytorch_util import dict_apply
 from diffusion_policy_3d.env_runner.base_runner import BaseRunner
-import diffusion_policy_3d.common.logger_util as logger_util
-from termcolor import cprint
-import pdb
-from queue import deque
+from diffusion_policy_3d.policy.base_policy import BasePolicy
 
 
 class RobotRunner(BaseRunner):

@@ -1,20 +1,14 @@
-from typing import Tuple, Any, Dict, Union, Callable, Iterable
-import numpy as np
-import tensorflow as tf
-import tensorflow_datasets as tfds
-
 import itertools
-from multiprocessing import Pool
 from functools import partial
-from tensorflow_datasets.core import download
+from multiprocessing import Pool
+from typing import Any, Callable, Dict, Iterable, Tuple, Union
+
+import numpy as np
+import tensorflow_datasets as tfds
+from tensorflow_datasets.core import dataset_builder, download, example_serializer, file_adapters, naming, utils
 from tensorflow_datasets.core import split_builder as split_builder_lib
-from tensorflow_datasets.core import naming
 from tensorflow_datasets.core import splits as splits_lib
-from tensorflow_datasets.core import utils
 from tensorflow_datasets.core import writer as writer_lib
-from tensorflow_datasets.core import example_serializer
-from tensorflow_datasets.core import dataset_builder
-from tensorflow_datasets.core import file_adapters
 
 Key = Union[str, int]
 # The nested example dict passed to `features.encode_example`

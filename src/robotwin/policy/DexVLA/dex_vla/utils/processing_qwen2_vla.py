@@ -29,7 +29,6 @@ from transformers.processing_utils import ProcessingKwargs, ProcessorMixin, Unpa
 from transformers.tokenization_utils_base import PreTokenizedInput, TextInput
 from transformers.utils import logging
 
-
 logger = logging.get_logger(__name__)
 
 
@@ -175,4 +174,5 @@ class Qwen2VLProcessor(ProcessorMixin):
         return list(dict.fromkeys(tokenizer_input_names + image_processor_input_names))
 
 from transformers import AutoProcessor
+
 AutoProcessor.register("Qwen2VLProcessor", Qwen2VLProcessor)

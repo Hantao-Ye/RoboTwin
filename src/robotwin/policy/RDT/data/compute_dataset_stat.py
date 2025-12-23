@@ -3,19 +3,18 @@ This file will compute the min, max, mean, and standard deviation of each datase
 in `pretrain_datasets.json` or `pretrain_datasets.json`.
 """
 
-import json
 import argparse
+import json
 import os
 
-# from multiprocessing import Pool, Manager
-
-import tensorflow as tf
 import numpy as np
-from tqdm import tqdm
 
-from data.vla_dataset import VLADataset
+# from multiprocessing import Pool, Manager
+import tensorflow as tf
 from data.hdf5_vla_dataset import HDF5VLADataset
 from data.preprocess import generate_json_state
+from data.vla_dataset import VLADataset
+from tqdm import tqdm
 
 
 # Process each dataset to get the statistics

@@ -1,18 +1,12 @@
-import sapien.core as sapien
+import os
+
 import numpy as np
-import pdb
-from PIL import Image, ImageColor
-import open3d as o3d
-import json
-import transforms3d as t3d
-import cv2
+import sapien.core as sapien
 import torch
 import yaml
-import trimesh
-import math
+from PIL import ImageColor
+
 from .._GLOBAL_CONFIGS import CONFIGS_PATH
-import os
-from sapien.sensor import StereoDepthSensor, StereoDepthSensorConfig
 
 try:
     import pytorch3d.ops as torch3d_ops

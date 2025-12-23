@@ -2,13 +2,12 @@ import os
 
 import numpy as np
 import torch
-from PIL import Image
-from torchvision import transforms
-
 from configs.state_vec import STATE_VEC_IDX_MAPPING
 from models.multimodal_encoder.siglip_encoder import SiglipVisionTower
 from models.multimodal_encoder.t5_encoder import T5Embedder
 from models.rdt_runner import RDTRunner
+from PIL import Image
+from torchvision import transforms
 
 MANISKILL_INDICES = [STATE_VEC_IDX_MAPPING[f"right_arm_joint_{i}_pos"]
                      for i in range(7)] + [STATE_VEC_IDX_MAPPING[f"right_gripper_open"]]

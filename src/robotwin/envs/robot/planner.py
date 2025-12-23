@@ -1,30 +1,28 @@
-import mplib.planner
-import mplib
-import numpy as np
-import pdb
 import traceback
+
+import mplib
+import mplib.planner
 import numpy as np
 import toppra as ta
-from mplib.sapien_utils import SapienPlanner, SapienPlanningWorld
 import transforms3d as t3d
-import robotwin.envs._GLOBAL_CONFIGS as CONFIGS
+from mplib.sapien_utils import SapienPlanner, SapienPlanningWorld
 
+import robotwin.envs._GLOBAL_CONFIGS as CONFIGS
 
 try:
     # ********************** CuroboPlanner (optional) **********************
+
+    import torch
+    import yaml
     from curobo.types.math import Pose as CuroboPose
-    import time
     from curobo.types.robot import JointState
+    from curobo.util import logger
     from curobo.wrap.reacher.motion_gen import (
         MotionGen,
         MotionGenConfig,
         MotionGenPlanConfig,
         PoseCostMetric,
     )
-    from curobo.util import logger
-    import torch
-    import yaml
-    from curobo.util import logger
     logger.setup_logger(level="error", logger_name="curobo")
 
     class CuroboPlanner:

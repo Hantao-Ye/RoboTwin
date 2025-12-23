@@ -1,11 +1,12 @@
-import tensorflow as tf
-import h5py
-import os
 import fnmatch
+import os
 import shutil
-from tqdm import tqdm
 from multiprocessing import Pool
+
+import h5py
 import numpy as np
+import tensorflow as tf
+from tqdm import tqdm
 
 
 def _bytes_feature(value):

@@ -1,10 +1,9 @@
+import glob
+
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
-import math
-import glob
-from copy import deepcopy
-from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 
 
 class place_object_stand(Base_Task):

@@ -1,13 +1,12 @@
+import argparse
 import os
-import numpy as np
+
 import cv2
 import h5py
-import argparse
-
-import matplotlib.pyplot as plt
-from constants import DT
-
 import IPython
+import matplotlib.pyplot as plt
+import numpy as np
+from constants import DT
 
 e = IPython.embed
 

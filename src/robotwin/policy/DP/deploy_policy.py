@@ -1,6 +1,8 @@
 import numpy as np
-from .dp_model import DP
 import yaml
+
+from .dp_model import DP
+
 
 def encode_obs(observation):
     head_cam = (np.moveaxis(observation["observation"]["head_camera"]["rgb"], -1, 0) / 255)

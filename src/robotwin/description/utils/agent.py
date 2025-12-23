@@ -1,10 +1,10 @@
-from typing import List, Type, Optional
-from pydantic import BaseModel, Field
 import json
 import os
+from typing import List, Optional, Type
+
 from azure.ai.inference import ChatCompletionsClient
-from azure.ai.inference.models import SystemMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
+from pydantic import BaseModel
 
 endpoint = "https://d-robotics.openai.azure.com/openai/deployments/gpt-4o"
 model_name = "gpt-4o"

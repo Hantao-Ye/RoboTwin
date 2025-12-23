@@ -1,9 +1,7 @@
-import cv2
-import numpy as np
 import os
 import subprocess
-import pickle
-import pdb
+
+import numpy as np
 
 
 def images_to_video(imgs: np.ndarray, out_path: str, fps: float = 30.0, is_rgb: bool = True) -> None:

@@ -1,9 +1,11 @@
-import numpy as np
 import os
 from pathlib import Path
+from typing import Literal
+
+import numpy as np
 import sapien.core as sapien
 import transforms3d as t3d
-from typing import Literal
+
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 
 

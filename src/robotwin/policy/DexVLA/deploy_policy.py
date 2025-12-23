@@ -1,24 +1,22 @@
-import os.path
 
-from torchvision import transforms
+import pickle
+
+import cv2
+import numpy as np
 from aloha_scripts.utils import *
-import time
-from data_utils.dataset import set_seed
-from einops import rearrange
-from transformers import AutoConfig, AutoProcessor, AutoTokenizer
+from PIL import Image
+from torchvision import transforms
+from transformers import AutoConfig
 
-import sys
-from robotwin.policy.DexVLA.policy_heads.models.transformer_diffusion.modeling_dit_diffusion import *
-from robotwin.policy.DexVLA.policy_heads.models.transformer_diffusion.configuration_dit_diffusion import *
+from robotwin.policy.DexVLA.dex_vla.model_load_utils import load_model_for_eval
 from robotwin.policy.DexVLA.dex_vla.utils.image_processing_qwen2_vla import *
+
 # from paligemma_vla.utils.processing_paligemma_vla import *
 # from robotwin.policy.DexVLA.dex_vla.utils.processing_qwen2_vla import *
 from robotwin.policy.DexVLA.evaluate.vla_policy import *
-from robotwin.policy.DexVLA.dex_vla.model_load_utils import load_model_for_eval
-from PIL import Image
-import pickle
-import cv2
-import numpy as np
+from robotwin.policy.DexVLA.policy_heads.models.transformer_diffusion.configuration_dit_diffusion import *
+from robotwin.policy.DexVLA.policy_heads.models.transformer_diffusion.modeling_dit_diffusion import *
+
 
 def pre_process(robot_state_value, key, stats):
     tmp = robot_state_value

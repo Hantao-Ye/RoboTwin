@@ -7,8 +7,8 @@ GPT model:
 - the final decoder is a linear projection into a vanilla Softmax classifier
 """
 
-import math
 import logging
+import math
 
 import torch
 import torch.nn as nn

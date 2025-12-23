@@ -1,16 +1,15 @@
-import time
-import os
-import numpy as np
 import argparse
-import matplotlib.pyplot as plt
-import h5py
+import os
+import time
 
+import h5py
+import IPython
+import matplotlib.pyplot as plt
+import numpy as np
 from constants import PUPPET_GRIPPER_POSITION_NORMALIZE_FN, SIM_TASK_CONFIGS
 from ee_sim_env import make_ee_sim_env
-from sim_env import make_sim_env, BOX_POSE
-from scripted_policy import PickAndTransferPolicy, InsertionPolicy
-
-import IPython
+from scripted_policy import InsertionPolicy, PickAndTransferPolicy
+from sim_env import BOX_POSE, make_sim_env
 
 e = IPython.embed
 

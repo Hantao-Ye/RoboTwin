@@ -1,7 +1,7 @@
-from typing import Dict, Callable, List
 import collections
+from typing import Callable, Dict, List
+
 import torch
-import torch.nn as nn
 
 
 def dict_apply(x: Dict[str, torch.Tensor], func: Callable[[torch.Tensor], torch.Tensor]) -> Dict[str, torch.Tensor]:

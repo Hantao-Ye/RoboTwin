@@ -1,20 +1,12 @@
 import copy
-from dataclasses import dataclass, field, fields, asdict
-import json
-import logging
-import pathlib
-from typing import Dict, Optional, Sequence, List
-import sys
-import torch
-
-import transformers
 import gc
+from dataclasses import dataclass
+from typing import Dict, Sequence
 
-from PIL import Image
 import numpy as np
-import os
-from qwen_vl_utils import process_vision_info
-from qwen_vl_utils import fetch_image, fetch_video
+import torch
+import transformers
+
 
 @dataclass
 class DexVLADataCollatorForSupervisedDataset(object):

@@ -29,18 +29,17 @@ from accelerate.utils import DeepSpeedPlugin, ProjectConfiguration, set_seed
 from diffusers.optimization import get_scheduler
 from diffusers.utils import is_wandb_available
 from huggingface_hub import create_repo, upload_folder
-from tqdm.auto import tqdm
-from safetensors.torch import load_model
-
 from models.ema_model import EMAModel
 from models.multimodal_encoder.siglip_encoder import SiglipVisionTower
 from models.multimodal_encoder.t5_encoder import T5Embedder
 from models.rdt_runner import RDTRunner
+from safetensors.torch import load_model
+from tqdm.auto import tqdm
 from train.dataset import DataCollatorForVLAConsumerDataset, VLAConsumerDataset
 from train.sample import log_sample_res
 
 if is_wandb_available():
-    import wandb
+    pass
 
 
 def save_model_card(repo_id: str, base_model=str, repo_folder=None):

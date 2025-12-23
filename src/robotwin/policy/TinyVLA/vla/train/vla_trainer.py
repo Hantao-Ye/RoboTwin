@@ -1,22 +1,22 @@
-import torch
-import torch.nn as nn
-
-from torch.utils.data import Sampler
-
-from transformers.trainer import *
 import math
 import sys
-from transformers import Trainer
-from transformers.trainer import (
-    is_sagemaker_mp_enabled,
-    get_parameter_names,
-    has_length,
-    ALL_LAYERNORM_LAYERS,
-    logger,
-)
-from typing import List, Optional, Dict
+
 # from transformers.utils import is_torch_tpu_available
 import time
+from typing import Optional
+
+import torch
+import torch.nn as nn
+from transformers import Trainer
+from transformers.trainer import *
+from transformers.trainer import (
+    ALL_LAYERNORM_LAYERS,
+    get_parameter_names,
+    has_length,
+    is_sagemaker_mp_enabled,
+    logger,
+)
+
 
 def maybe_zero_3(param, ignore_status=False, name=None):
     from deepspeed import zero

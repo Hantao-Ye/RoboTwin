@@ -1,8 +1,9 @@
+import functools
 from typing import Union
+
+import numpy as np
 import pytorch3d.transforms as pt
 import torch
-import numpy as np
-import functools
 
 
 class RotationTransformer:

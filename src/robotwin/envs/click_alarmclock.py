@@ -1,8 +1,6 @@
-from copy import deepcopy
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
-import math
 
 
 class click_alarmclock(Base_Task):

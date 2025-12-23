@@ -1,12 +1,10 @@
-import os
 import fnmatch
-import json
+import os
 
-import h5py
-import yaml
 import cv2
+import h5py
 import numpy as np
-
+import yaml
 from configs.state_vec import STATE_VEC_IDX_MAPPING
 
 

@@ -39,12 +39,10 @@ __all__ = [
     "positive_y_is_up",
 ]
 
-from typing import List, Sequence, Tuple
-
-import pygame
+from typing import Sequence, Tuple
 
 import numpy as np
-
+import pygame
 import pymunk
 from pymunk.space_debug_draw_options import SpaceDebugColor
 from pymunk.vec2d import Vec2d

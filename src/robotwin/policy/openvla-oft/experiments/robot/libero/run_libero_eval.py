@@ -17,9 +17,8 @@ from typing import Optional, Union
 import draccus
 import numpy as np
 import tqdm
-from libero.libero import benchmark
-
 import wandb
+from libero.libero import benchmark
 
 # Append current directory so that interpreter can find experiments.robot
 sys.path.append("../..")

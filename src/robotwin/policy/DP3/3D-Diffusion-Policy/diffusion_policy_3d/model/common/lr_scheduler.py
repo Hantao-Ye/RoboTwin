@@ -1,9 +1,9 @@
 from diffusers.optimization import (
-    Union,
-    SchedulerType,
-    Optional,
-    Optimizer,
     TYPE_TO_SCHEDULER_FUNCTION,
+    Optimizer,
+    Optional,
+    SchedulerType,
+    Union,
 )
 
 

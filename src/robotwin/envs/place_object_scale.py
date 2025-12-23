@@ -1,11 +1,11 @@
-from copy import deepcopy
+import glob
+
+import numpy as np
+
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
-import math
-import glob
-import numpy as np
-from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 
 
 class place_object_scale(Base_Task):

@@ -18,19 +18,25 @@ from dataclasses import dataclass
 from typing import Optional, Union
 
 import torch
-import torch.utils.checkpoint
 from torch import nn
+import torch.utils.checkpoint
 
-from ...cache_utils import Cache, HybridCache, StaticCache
+from ...cache_utils import Cache
+from ...cache_utils import HybridCache
+from ...cache_utils import StaticCache
 from ...generation import GenerationMixin
 from ...modeling_flash_attention_utils import FlashAttentionKwargs
 from ...modeling_outputs import BaseModelOutputWithPast
 from ...modeling_utils import PreTrainedModel
 from ...processing_utils import Unpack
-from ...utils import LossKwargs, ModelOutput, auto_docstring, can_return_tuple, is_torchdynamo_compiling, logging
+from ...utils import LossKwargs
+from ...utils import ModelOutput
+from ...utils import auto_docstring
+from ...utils import can_return_tuple
+from ...utils import is_torchdynamo_compiling
+from ...utils import logging
 from ..auto import AutoModel
 from .configuration_paligemma import PaliGemmaConfig
-
 
 logger = logging.get_logger(__name__)
 

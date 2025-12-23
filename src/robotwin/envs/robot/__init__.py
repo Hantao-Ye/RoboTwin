@@ -1,2 +1,2 @@
-from .robot import *
 from .planner import *
+from .robot import *
