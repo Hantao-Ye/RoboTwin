@@ -8,13 +8,11 @@ import traceback
 
 import yaml
 
-from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH, SCRIPT_PATH
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
 
-SCRIPT_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "script")
-CONFIGS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "task_config")
 OBJECTS_PATH = os.path.join(ASSETS_PATH, "objects")
 
 
@@ -89,7 +87,7 @@ def class_decorator_gen(task_name):
     try:
         env_class = getattr(envs_module, f"gpt_{task_name}")
         return env_class()
-    except:
+    except Exception:
         raise SystemExit("No such task")
 
 
@@ -111,7 +109,7 @@ def class_decorator_env(task_name):
     try:
         env_class = getattr(envs_module, task_name)
         return env_class()
-    except:
+    except Exception:
         raise SystemExit("No such task")
 
 

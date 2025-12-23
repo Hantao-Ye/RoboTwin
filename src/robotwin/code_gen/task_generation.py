@@ -1,16 +1,11 @@
+import argparse
 import json
 import os
-import sys
 
-# Add the project root directory to the system path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-import argparse
-
-from gpt_agent import *
-from prompt import *
-from task_info import *
-from test_gen_code import *
+from . import task_info as task_info_module
+from .gpt_agent import generate
+from .prompt import AVAILABLE_ENV_FUNCTION, BASIC_INFO, FUNCTION_EXAMPLE
+from .test_gen_code import enrich_actors, run, setup_task_config
 
 
 def generate_code(task_info, las_error=None, message=None):
@@ -222,9 +217,11 @@ if __name__ == "__main__":
     # Get task information based on task name
     try:
         task_name = parser.parse_args().task_name.upper()
-        exec(f'now_task = {task_name}')
-    except:
-        raise ValueError("The task name is wrong.")
+        now_task = getattr(task_info_module, task_name)
+    except AttributeError:
+        raise ValueError(f"Invalid task name specified: {task_name}")
+    except Exception as e:
+        raise ValueError("Error retrieving task info.") from e
 
     # Run main function with task information
     main(now_task)

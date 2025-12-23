@@ -1,15 +1,10 @@
-import os
-import sys
-
-# Add project root directory to system path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import argparse
+import os
 
-from gpt_agent import *
-from prompt import *
-from task_info import *
-from test_gen_code import *
+from . import task_info as task_info_module
+from .gpt_agent import generate
+from .prompt import AVAILABLE_ENV_FUNCTION, BASIC_INFO, FUNCTION_EXAMPLE
+from .test_gen_code import enrich_actors, run, setup_task_config
 
 
 def generate_code_once(task_info):
@@ -92,7 +87,9 @@ if __name__ == "__main__":
     
     try:
         task_name = parser.parse_args().task_name.upper()
-        exec(f'now_task = {task_name}')
+        now_task = getattr(task_info_module, task_name)
+    except AttributeError:
+        raise ValueError(f"Invalid task name specified: {task_name}")
     except Exception as e:
         raise ValueError(f"The task name is wrong: {e}")
 
