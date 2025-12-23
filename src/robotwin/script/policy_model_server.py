@@ -14,10 +14,6 @@ import argparse
 from pathlib import Path
 from collections import deque
 
-sys.path.append("./")
-sys.path.append("./src")
-sys.path.append(f"./policy")
-sys.path.append("./description/utils")
 from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH
 
 import numpy as np

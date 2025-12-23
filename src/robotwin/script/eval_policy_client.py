@@ -2,11 +2,7 @@ import sys
 import os
 import subprocess
 
-sys.path.append("./")
-sys.path.append("./src")
-sys.path.append(f"./policy")
-sys.path.append("./description/utils")
-from robotwin.envs import CONFIGS_PATH
+from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH
 from robotwin.envs.utils.create_actor import UnStableError
 
 import numpy as np
@@ -20,18 +16,13 @@ import importlib
 import argparse
 import pdb
 
-from generate_episode_instructions import *
+from robotwin.description.utils.generate_episode_instructions import generate_episode_descriptions
 
-
-import sys
-import os
-import subprocess
 import socket
 import json
 import threading
 import time
 import random
-import traceback
 import yaml
 from datetime import datetime
 import importlib

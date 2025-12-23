@@ -1,11 +1,8 @@
 import sys
 
-sys.path.append("./")
-
 import sapien.core as sapien
 from collections import OrderedDict
 import pdb
-from robotwin.envs import *
 import yaml
 import importlib
 import json
