@@ -1,4 +1,5 @@
-import h5py, cv2
+import cv2
+import h5py
 import numpy as np
 
 

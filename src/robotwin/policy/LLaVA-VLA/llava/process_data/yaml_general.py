@@ -1,7 +1,9 @@
+import os
+
 import h5py
 import numpy as np
 import yaml
-import os
+
 
 class MyDumper(yaml.Dumper):
     def represent_float(self, data):

@@ -1,10 +1,9 @@
-from typing import Union, Dict
+from typing import Dict, Union
 
-import unittest
-import zarr
 import numpy as np
 import torch
 import torch.nn as nn
+import zarr
 from diffusion_policy.common.pytorch_util import dict_apply
 from diffusion_policy.model.common.dict_of_tensor_mixin import DictOfTensorMixin
 

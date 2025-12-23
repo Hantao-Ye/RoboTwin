@@ -1,8 +1,8 @@
-import trimesh
-import os
-import numpy as np
 import argparse
+import os
 import traceback
+
+import trimesh
 
 
 def convert_obj_glb(source_dir):

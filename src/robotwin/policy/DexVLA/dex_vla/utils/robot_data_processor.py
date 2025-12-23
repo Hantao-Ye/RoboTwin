@@ -1,10 +1,11 @@
-from PIL import Image
 import numpy as np
-from torchvision.transforms.functional import to_pil_image, to_tensor
-import torchvision.transforms as transforms
 import torch
-from qwen_vl_utils import process_vision_info
+import torchvision.transforms as transforms
+from PIL import Image
 from qwen_vl_utils import *
+from torchvision.transforms.functional import to_pil_image, to_tensor
+
+
 class DexVLAProcess:
     def __init__(
             self,

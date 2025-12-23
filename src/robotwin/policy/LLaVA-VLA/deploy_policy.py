@@ -1,16 +1,15 @@
-from .llava_vla_model import *
 import argparse
+
 import numpy as np
 from PIL import Image
+
+from .llava_vla_model import *
 
 EXPECTED_ACTION_DIM = 70
 NUM_ACTIONS = 5
 ACTION_DIM = 14
 
-import torch
-import torchvision.transforms as T
 from PIL import Image
-import os
 
 
 def encode_obs(observation):

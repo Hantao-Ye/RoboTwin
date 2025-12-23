@@ -1,7 +1,7 @@
+
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
-from copy import deepcopy
 
 
 class rotate_qrcode(Base_Task):

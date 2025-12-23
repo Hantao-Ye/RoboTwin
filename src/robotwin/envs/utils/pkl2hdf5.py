@@ -1,9 +1,10 @@
-import h5py, pickle
-import numpy as np
 import os
+import pickle
+
 import cv2
-from collections.abc import Mapping, Sequence
-import shutil
+import h5py
+import numpy as np
+
 from .images_to_video import images_to_video
 
 

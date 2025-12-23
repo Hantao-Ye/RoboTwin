@@ -3,13 +3,12 @@ This file will compute the min, max, mean, and standard deviation of each datase
 in `pretrain_datasets.json` or `pretrain_datasets.json`.
 """
 
-import json
 import argparse
+import json
 
 import numpy as np
-from tqdm import tqdm
-
 from data.hdf5_vla_dataset import HDF5VLADataset
+from tqdm import tqdm
 
 
 def process_hdf5_dataset(vla_dataset):

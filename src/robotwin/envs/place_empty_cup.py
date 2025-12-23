@@ -1,6 +1,6 @@
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
 
 
 class place_empty_cup(Base_Task):

@@ -1,10 +1,8 @@
-import os
 import json
-import argparse
+import os
+
 import torch
 import yaml
-from tqdm import tqdm
-
 from models.multimodal_encoder.t5_encoder import T5Embedder
 
 

@@ -2,25 +2,23 @@
 """
 Backbone modules.
 """
-from collections import OrderedDict
 import os
+import sys
+from typing import List
+
 import torch
-import torch.nn.functional as F
 import torchvision
 from torch import nn
 from torchvision.models._utils import IntermediateLayerGetter
-from typing import Dict, List
-import sys
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, '..'))
 sys.path.append(project_root)
 
+import IPython
 from util.misc import NestedTensor, is_main_process
 
 from .position_encoding import build_position_encoding
-
-import IPython
 
 e = IPython.embed
 

@@ -1,49 +1,43 @@
+import math
 import os
+import pdb
+import pickle
 import re
+import shutil
+from copy import deepcopy
+from typing import Literal
+
+import gymnasium as gym
+import imageio
+import numpy as np
 import sapien.core as sapien
+import toppra as ta
+import torch
+import transforms3d as t3d
+import yaml
 from sapien.render import clear_cache as sapien_clear_cache
 from sapien.utils.viewer import Viewer
-import numpy as np
-import gymnasium as gym
-import pdb
-import toppra as ta
-import json
-import transforms3d as t3d
-from collections import OrderedDict
-import torch, random
-import yaml
-import shutil
-import pickle
 
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH, CONFIGS_PATH, GRASP_DIRECTION_DIC
+
+from .camera import Camera
+from .robot import Robot
 from .utils import (
-    create_table,
-    create_box,
-    rand_create_cluttered_actor,
+    Action,
     Actor,
     ArmTag,
-    Action,
     UnStableError,
+    cal_quat_dis,
+    create_box,
+    create_table,
     get_available_cluttered_objects,
+    get_place_pose,
+    process_folder_to_hdf5_video,
+    rand_create_cluttered_actor,
     save_img,
     save_pkl,
-    process_folder_to_hdf5_video,
     transforms,
-    cal_quat_dis,
-    get_place_pose,
 )
-import math
-from .robot import Robot
-from .camera import Camera
-from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH, GRASP_DIRECTION_DIC, CONFIGS_PATH
-
-from copy import deepcopy
-import subprocess
-from pathlib import Path
-import trimesh
-import imageio
-import glob
-
-from typing import Optional, Literal
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)

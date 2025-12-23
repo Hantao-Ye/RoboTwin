@@ -1,14 +1,15 @@
 import copy
+import json
 import os
-from transformers import Qwen2VLForConditionalGeneration, AutoTokenizer, AutoProcessor
+from collections import Counter
+
+import cv2
+import h5py
+import numpy as np
 from qwen_vl_utils import process_vision_info
 from tqdm import tqdm
-import h5py
-import torch
-import numpy as np
-import cv2
-from collections import Counter
-import json
+from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
+
 RED = '\033[31m'
 GREEN = '\033[32m'
 YELLOW = '\033[33m'

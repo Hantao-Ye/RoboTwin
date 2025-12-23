@@ -1,6 +1,6 @@
-import torch
-import torch.nn as nn
 import re
+
+import torch.nn as nn
 
 
 class IdentityMap(nn.Module):

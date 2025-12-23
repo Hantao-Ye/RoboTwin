@@ -1,5 +1,5 @@
-from typing import Optional, Dict
 import os
+from typing import Dict, Optional
 
 
 class TopKCheckpointManager:

@@ -1,6 +1,6 @@
-from typing import Sequence, Optional
+from typing import Optional, Sequence
+
 import torch
-from torch import nn
 from diffusion_policy_3d.model.common.module_attr_mixin import ModuleAttrMixin
 
 

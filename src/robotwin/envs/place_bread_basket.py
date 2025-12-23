@@ -1,9 +1,8 @@
+
+import numpy as np
+
 from ._base_task import Base_Task
 from .utils import *
-import sapien
-import math
-from copy import deepcopy
-import numpy as np
 
 
 class place_bread_basket(Base_Task):

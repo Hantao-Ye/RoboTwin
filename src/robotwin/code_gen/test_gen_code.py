@@ -1,15 +1,13 @@
-import sys
 
-import sapien.core as sapien
-from collections import OrderedDict
-import pdb
-import yaml
 import importlib
+import inspect
 import json
-import traceback
 import os
 import time
-import inspect
+import traceback
+
+import yaml
+
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 
 current_file_path = os.path.abspath(__file__)

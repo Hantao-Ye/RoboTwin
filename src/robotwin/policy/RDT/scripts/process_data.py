@@ -2,12 +2,12 @@ import sys
 
 sys.path.append("./")
 
+import argparse
 import os
+
+import cv2
 import h5py
 import numpy as np
-import pickle
-import cv2
-import argparse
 import yaml
 from scripts.encode_lang_batch_once import encode_lang
 

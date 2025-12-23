@@ -1,12 +1,8 @@
+from typing import Dict, List, Type
+
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import torchvision
-import copy
-
-from typing import Optional, Dict, Tuple, Union, List, Type
 from termcolor import cprint
-import pdb
 
 
 def create_mlp(

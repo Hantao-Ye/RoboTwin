@@ -1,24 +1,20 @@
-from typing import Dict
-import math
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from einops import rearrange, reduce
-from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
-from termcolor import cprint
 import copy
-import time
-import pdb
+from typing import Dict
+
+import torch
+import torch.nn.functional as F
+from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
+from diffusion_policy_3d.common.model_util import print_params
+from diffusion_policy_3d.common.pytorch_util import dict_apply
 
 # import pytorch3d.ops as torch3d_ops
-
 from diffusion_policy_3d.model.common.normalizer import LinearNormalizer
-from diffusion_policy_3d.policy.base_policy import BasePolicy
 from diffusion_policy_3d.model.diffusion.conditional_unet1d import ConditionalUnet1D
 from diffusion_policy_3d.model.diffusion.mask_generator import LowdimMaskGenerator
-from diffusion_policy_3d.common.pytorch_util import dict_apply
-from diffusion_policy_3d.common.model_util import print_params
 from diffusion_policy_3d.model.vision.pointnet_extractor import DP3Encoder
+from diffusion_policy_3d.policy.base_policy import BasePolicy
+from einops import reduce
+from termcolor import cprint
 
 
 class DP3(BasePolicy):

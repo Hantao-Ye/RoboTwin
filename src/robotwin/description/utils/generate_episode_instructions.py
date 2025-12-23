@@ -1,13 +1,13 @@
-import json
-import re
-from typing import List, Dict, Any
-import os
 import argparse
+import json
+import os
 import random
+import re
+from typing import Any, Dict, List
+
 import yaml
+
 from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH, DESCRIPTION_PATH
-
-
 
 
 def extract_placeholders(instruction: str) -> List[str]:

@@ -1,7 +1,7 @@
-import sapien.core as sapien
 import numpy as np
+import sapien.core as sapien
 import transforms3d as t3d
-import sapien.physx as sapienp
+
 from .create_actor import *
 
 

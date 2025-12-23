@@ -1,10 +1,11 @@
+import argparse
+import json
 import os
+
+import cv2
 import h5py
 import numpy as np
-import cv2
-import argparse
 import yaml
-import json
 
 
 def load_hdf5(dataset_path):

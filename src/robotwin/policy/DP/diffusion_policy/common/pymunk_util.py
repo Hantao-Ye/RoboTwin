@@ -1,7 +1,6 @@
-import pygame
+import numpy as np
 import pymunk
 import pymunk.pygame_util
-import numpy as np
 
 COLLTYPE_DEFAULT = 0
 COLLTYPE_MOUSE = 1

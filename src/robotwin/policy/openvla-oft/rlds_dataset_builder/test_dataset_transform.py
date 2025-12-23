@@ -1,12 +1,12 @@
 import argparse
 import importlib
-import tqdm
-import numpy as np
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # suppress debug warning messages
-import tensorflow as tf
-import tensorflow_datasets as tfds
 
+import numpy as np
+import tqdm
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # suppress debug warning messages
+import tensorflow_datasets as tfds
 from example_transform.transform import transform_step
 
 parser = argparse.ArgumentParser()

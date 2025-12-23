@@ -1,13 +1,15 @@
+import argparse
 import json
 import os
+import random
+from glob import glob
+from io import BytesIO
+
 import h5py
 import numpy as np
 from PIL import Image
-from io import BytesIO
-import argparse
-from glob import glob
-import random
 from tqdm import tqdm
+
 
 def decode_and_resize_images(image_bytes_array, size=256):
     resized = []

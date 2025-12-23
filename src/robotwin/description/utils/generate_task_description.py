@@ -1,7 +1,7 @@
 import json
-from agent import *
 from argparse import ArgumentParser
-import os
+
+from agent import *
 
 with open("./_generate_task_prompt.txt", "r") as f:
     system_prompt = f.read()

@@ -1,28 +1,25 @@
 
 import pickle
-import fnmatch
+
 import cv2
+
 cv2.setNumThreads(1)
-from aloha_scripts.utils import *
-import time
-from torch.utils.data import TensorDataset, DataLoader
-import torchvision.transforms as transforms
-import os
 import json
-import numpy as np
-
-from aloha_scripts.lerobot_constants import  TASK_CONFIGS
-
-from tqdm import tqdm
-import torch
-
-from lerobot.common.datasets.lerobot_dataset import LeRobotDataset, LeRobotDatasetMetadata
-
+import os
 from typing import Protocol, SupportsIndex, TypeVar
+
+import numpy as np
+import torch
+import torchvision.transforms as transforms
+from aloha_scripts.lerobot_constants import TASK_CONFIGS
+from aloha_scripts.utils import *
+from lerobot.common.datasets.lerobot_dataset import (
+    LeRobotDataset,
+)
+from tqdm import tqdm
+
 T_co = TypeVar("T_co", covariant=True)
 from tqdm import tqdm
-
-
 
 
 class Dataset(Protocol[T_co]):

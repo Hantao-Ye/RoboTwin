@@ -3,13 +3,12 @@ import sys
 
 sys.path.append('./policy/ACT/')
 
+import argparse
 import os
+
+import cv2
 import h5py
 import numpy as np
-import pickle
-import cv2
-import argparse
-import pdb
 
 task_prompt = {
     "place_object_scale": "Use one arm to grab the object and put it on the scale.",

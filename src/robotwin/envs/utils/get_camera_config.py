@@ -1,4 +1,7 @@
-import yaml, os
+import os
+
+import yaml
+
 from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH
 
 

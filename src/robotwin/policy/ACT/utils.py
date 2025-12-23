@@ -1,10 +1,10 @@
+import os
+
+import h5py
+import IPython
 import numpy as np
 import torch
-import os
-import h5py
-from torch.utils.data import TensorDataset, DataLoader
-
-import IPython
+from torch.utils.data import DataLoader
 
 e = IPython.embed
 

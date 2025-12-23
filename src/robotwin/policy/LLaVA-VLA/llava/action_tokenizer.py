@@ -4,14 +4,15 @@ action_tokenizer.py
 Extension class; wraps base LLM/VLM tokenizer with logic to discretize and tokenize continuous robot actions.
 """
 
+import json
+from pathlib import Path
 from typing import List, Union
 
 import numpy as np
-from transformers import PreTrainedTokenizerBase
-from pathlib import Path
-import yaml
-import json
 import torch
+import yaml
+from transformers import PreTrainedTokenizerBase
+
 
 class ActionTokenizer:
     def __init__(

@@ -1,7 +1,8 @@
-import os
-import yaml
 import argparse
+import os
 from datetime import datetime
+
+import yaml
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate finetune config.")

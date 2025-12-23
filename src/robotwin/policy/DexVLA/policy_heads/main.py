@@ -1,12 +1,11 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 import argparse
-from pathlib import Path
-
-import numpy as np
-import torch
-from .models import build_ACT_model, build_CNNMLP_model
 
 import IPython
+import torch
+
+from .models import build_ACT_model, build_CNNMLP_model
+
 e = IPython.embed
 
 def get_args_parser():

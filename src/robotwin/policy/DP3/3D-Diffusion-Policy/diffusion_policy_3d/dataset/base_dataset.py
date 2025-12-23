@@ -2,6 +2,7 @@ from typing import Dict
 
 import torch
 import torch.nn
+
 from diffusion_policy_3d.model.common.normalizer import LinearNormalizer
 
 

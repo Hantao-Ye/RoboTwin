@@ -1,5 +1,5 @@
-from argparse import ArgumentParser
 import json
+from argparse import ArgumentParser
 
 
 def clear_seen_unseen(task_name):

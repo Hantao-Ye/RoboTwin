@@ -1,13 +1,14 @@
-import sapien.core as sapien
-import numpy as np
-import transforms3d as t3d
-import sapien.physx as sapienp
-from .create_actor import *
-
-import re
 import json
+import re
 from pathlib import Path
+
+import numpy as np
+import sapien.core as sapien
+import transforms3d as t3d
+
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+
+from .create_actor import *
 
 
 def get_all_cluttered_objects():

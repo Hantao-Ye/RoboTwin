@@ -1,5 +1,6 @@
+import json
+import os
 import pathlib
-import os, json
 
 current_dir = os.path.dirname(__file__)
 

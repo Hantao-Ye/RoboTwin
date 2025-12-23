@@ -1,8 +1,8 @@
 import argparse
 import os
-from train.train import train
 
 from accelerate.logging import get_logger
+from train.train import train
 
 
 def parse_args(input_args=None):

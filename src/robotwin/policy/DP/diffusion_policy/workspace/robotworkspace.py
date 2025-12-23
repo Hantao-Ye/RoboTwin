@@ -1,30 +1,31 @@
 if __name__ == "__main__":
-    import sys
     import os
     import pathlib
+    import sys
 
     ROOT_DIR = str(pathlib.Path(__file__).parent.parent.parent)
     sys.path.append(ROOT_DIR)
     os.chdir(ROOT_DIR)
 
-import os
-import hydra
-import torch
-from omegaconf import OmegaConf
-import pathlib
-from torch.utils.data import DataLoader
 import copy
+import os
+import pathlib
+import random
 
-import tqdm, random
+import hydra
 import numpy as np
-from diffusion_policy.workspace.base_workspace import BaseWorkspace
-from diffusion_policy.policy.diffusion_unet_image_policy import DiffusionUnetImagePolicy
-from diffusion_policy.dataset.base_dataset import BaseImageDataset
+import torch
+import tqdm
 from diffusion_policy.common.checkpoint_util import TopKCheckpointManager
 from diffusion_policy.common.json_logger import JsonLogger
-from diffusion_policy.common.pytorch_util import dict_apply, optimizer_to
-from diffusion_policy.model.diffusion.ema_model import EMAModel
+from diffusion_policy.common.pytorch_util import optimizer_to
+from diffusion_policy.dataset.base_dataset import BaseImageDataset
 from diffusion_policy.model.common.lr_scheduler import get_scheduler
+from diffusion_policy.model.diffusion.ema_model import EMAModel
+from diffusion_policy.policy.diffusion_unet_image_policy import DiffusionUnetImagePolicy
+from diffusion_policy.workspace.base_workspace import BaseWorkspace
+from omegaconf import OmegaConf
+from torch.utils.data import DataLoader
 
 OmegaConf.register_new_resolver("eval", eval, replace=True)
 

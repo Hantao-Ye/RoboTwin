@@ -9,19 +9,24 @@
 # GLIDE: https://github.com/openai/glide-text2im
 # MAE: https://github.com/facebookresearch/mae/blob/main/models_mae.py
 # --------------------------------------------------------
+import sys
 from collections import OrderedDict
+from pathlib import Path
 
 import torch
 import torch.nn as nn
 
-from pathlib import Path
-import sys, os
 # get current workspace
 current_file = Path(__file__)
 sys.path.append(str(current_file.parent.parent))
 
-from rdt.blocks import (FinalLayer, RDTBlock, TimestepEmbedder, get_1d_sincos_pos_embed_from_grid,
-                        get_multimodal_cond_pos_embed)
+from rdt.blocks import (
+    FinalLayer,
+    RDTBlock,
+    TimestepEmbedder,
+    get_1d_sincos_pos_embed_from_grid,
+    get_multimodal_cond_pos_embed,
+)
 
 
 class RDT(nn.Module):

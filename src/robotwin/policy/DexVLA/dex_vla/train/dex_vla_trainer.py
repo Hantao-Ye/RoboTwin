@@ -1,24 +1,23 @@
+import math
 import os
+import sys
+from typing import Dict, List, Optional
+
 import torch
 import torch.nn as nn
-
-from torch.utils.data import Sampler, DataLoader, BatchSampler, Dataset
-
-from transformers.trainer import *
 from diffusers.training_utils import EMAModel
-import math
-import sys
+from torch.utils.data import DataLoader, Dataset, Sampler
 from transformers import Trainer
+from transformers.trainer import *
 from transformers.trainer import (
-    is_sagemaker_mp_enabled,
+    ALL_LAYERNORM_LAYERS,
     get_parameter_names,
     has_length,
-    ALL_LAYERNORM_LAYERS,
+    is_sagemaker_mp_enabled,
     logger,
 )
-from typing import List, Optional, Dict
 from transformers.utils import is_torch_tpu_available
-from transformers.trainer_pt_utils import get_dataloader_sampler
+
 
 def maybe_zero_3(param, ignore_status=False, name=None):
     from deepspeed import zero

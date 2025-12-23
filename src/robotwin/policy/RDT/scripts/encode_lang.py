@@ -2,7 +2,6 @@ import os
 
 import torch
 import yaml
-
 from models.multimodal_encoder.t5_encoder import T5Embedder
 
 GPU = 0

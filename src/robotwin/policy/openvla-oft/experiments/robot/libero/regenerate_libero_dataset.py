@@ -26,7 +26,6 @@ Usage:
 import argparse
 import json
 import os
-import time
 
 import h5py
 import numpy as np
@@ -38,7 +37,6 @@ from experiments.robot.libero.libero_utils import (
     get_libero_dummy_action,
     get_libero_env,
 )
-
 
 IMAGE_RESOLUTION = 256
 

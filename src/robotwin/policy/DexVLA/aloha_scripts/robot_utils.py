@@ -1,14 +1,16 @@
-import numpy as np
 import time
-from lerobot_constants import DT
-from interbotix_xs_msgs.msg import JointSingleCommand
 
 import IPython
+import numpy as np
+from interbotix_xs_msgs.msg import JointSingleCommand
+from lerobot_constants import DT
+
 e = IPython.embed
 
 class ImageRecorder:
     def __init__(self, init_node=True, is_debug=False):
         from collections import deque
+
         import rospy
         from cv_bridge import CvBridge
         from sensor_msgs.msg import Image
@@ -79,9 +81,10 @@ class ImageRecorder:
 class Recorder:
     def __init__(self, side, init_node=True, is_debug=False):
         from collections import deque
+
         import rospy
-        from sensor_msgs.msg import JointState
         from interbotix_xs_msgs.msg import JointGroupCommand, JointSingleCommand
+        from sensor_msgs.msg import JointState
 
         self.secs = None
         self.nsecs = None

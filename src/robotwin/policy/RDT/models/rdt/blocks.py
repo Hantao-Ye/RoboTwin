@@ -17,8 +17,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.jit import Final
 from timm.models.vision_transformer import Attention, Mlp, RmsNorm, use_fused_attn
+from torch.jit import Final
 
 
 #################################################################################

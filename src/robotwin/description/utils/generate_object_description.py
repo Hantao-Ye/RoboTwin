@@ -1,12 +1,12 @@
-import json
-from agent import *
-from argparse import ArgumentParser
-from get_image_from_glb import *
-import os
 import base64
-import pprint
-import time
+import json
+import os
 import random
+import time
+from argparse import ArgumentParser
+
+from agent import *
+from get_image_from_glb import *
 
 
 class subPart(BaseModel):

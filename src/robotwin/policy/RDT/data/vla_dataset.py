@@ -5,15 +5,14 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import yaml
-
 from data.episode_transform import (
-    process_episode,
+    bgr_to_rgb,
     flatten_episode,
     flatten_episode_agilex,
-    bgr_to_rgb,
+    process_episode,
 )
-from data.utils import dataset_to_path
 from data.preprocess_scripts import *
+from data.utils import dataset_to_path
 
 # Producer does not need GPU
 tf.config.set_visible_devices([], "GPU")

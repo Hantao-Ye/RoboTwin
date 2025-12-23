@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+import glob
 import os
 import sys
-import glob
+
 
 def print_color(message, color_code):
     NC = '\033[0m'

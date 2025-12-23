@@ -1,8 +1,7 @@
-import safetensors
 import os
+
 import torch
 from safetensors import safe_open
-
 
 path = '/home/rl/Downloads/output/checkpoint-4'
 path = '/media/rl/HDD/data/multi_head_train_results/aloha_qwen2_vla/qwen2_vl_2B/qwen2_vl_only_folding_shirt_lora_ema_finetune_dit_h_4w_steps/checkpoint-30000'

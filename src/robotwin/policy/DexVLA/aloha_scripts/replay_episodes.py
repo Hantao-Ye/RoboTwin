@@ -1,11 +1,12 @@
-import os
-import h5py
-from robot_utils import move_grippers
 import argparse
-from real_env import make_real_env
-from lerobot_constants import JOINT_NAMES, PUPPET_GRIPPER_JOINT_OPEN
+import os
 
+import h5py
 import IPython
+from lerobot_constants import JOINT_NAMES, PUPPET_GRIPPER_JOINT_OPEN
+from real_env import make_real_env
+from robot_utils import move_grippers
+
 e = IPython.embed
 
 STATE_NAMES = JOINT_NAMES + ["gripper", 'left_finger', 'right_finger']

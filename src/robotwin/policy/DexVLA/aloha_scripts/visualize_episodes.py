@@ -1,13 +1,14 @@
+import argparse
 import os
-import numpy as np
+
 import cv2
 import h5py
-import argparse
-
-import matplotlib.pyplot as plt
-from PIL import Image
 import IPython
+import matplotlib.pyplot as plt
+import numpy as np
+from PIL import Image
 from tqdm import tqdm
+
 e = IPython.embed
 
 JOINT_NAMES = ["waist", "shoulder", "elbow", "forearm_roll", "wrist_angle", "wrist_rotate"]

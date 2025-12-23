@@ -1,5 +1,6 @@
-from typing import List, Tuple, Optional, Dict
 import math
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 
 

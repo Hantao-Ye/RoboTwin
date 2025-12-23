@@ -10,12 +10,13 @@ import sys
 sys.stdout = open(sys.stdout.fileno(), mode="w", buffering=1)
 sys.stderr = open(sys.stderr.fileno(), mode="w", buffering=1)
 
-import hydra, pdb
-from omegaconf import OmegaConf
-import pathlib, yaml
-from diffusion_policy.workspace.base_workspace import BaseWorkspace
-
 import os
+import pathlib
+
+import hydra
+import yaml
+from diffusion_policy.workspace.base_workspace import BaseWorkspace
+from omegaconf import OmegaConf
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)

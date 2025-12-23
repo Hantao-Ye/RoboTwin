@@ -1,6 +1,6 @@
-from typing import Type, Any, Callable, Union, List, Mapping, Optional
-
 import copy
+from typing import Any, Callable, List, Mapping, Optional, Type, Union
+
 import torch
 import torch.nn as nn
 from torch import Tensor
@@ -14,7 +14,12 @@ def is_torch_version_lower_than_17():
 
 if not is_torch_version_lower_than_17():
     # TODO: Make sure the torchvision version is similarly updated.
-    from torchvision.models import ResNet18_Weights, ResNet34_Weights, ResNet101_Weights, ResNet50_Weights
+    from torchvision.models import (
+        ResNet18_Weights,
+        ResNet34_Weights,
+        ResNet50_Weights,
+        ResNet101_Weights,
+    )
 
 
 def conv3x3(in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1) -> nn.Conv2d:

@@ -2,14 +2,13 @@ import sys
 
 sys.path.append("./policy/ACT/")
 
+import argparse
+import json
 import os
+
+import cv2
 import h5py
 import numpy as np
-import pickle
-import cv2
-import argparse
-import pdb
-import json
 
 
 def load_hdf5(dataset_path):

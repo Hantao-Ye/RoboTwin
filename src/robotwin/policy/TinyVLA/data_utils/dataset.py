@@ -1,23 +1,22 @@
+import fnmatch
+import os
+
+import cv2
+import h5py
+import IPython
 import numpy as np
 import torch
-import os
-import h5py
-import pickle
-import fnmatch
-import tqdm, json
-import cv2
-from time import time
-from torch.utils.data import TensorDataset, DataLoader
 import torchvision.transforms as transforms
-from torchvision.transforms.functional import to_pil_image, to_tensor
-import IPython
-import copy
+
 e = IPython.embed
 from aloha_scripts.utils import *
+
 
 def flatten_list(l):
     return [item for sublist in l for item in sublist]
 import gc
+
+
 class EpisodicDataset(torch.utils.data.Dataset):
     def __init__(self, dataset_path_list, camera_names, norm_stats,
                  episode_ids, episode_len, chunk_size, policy_class,

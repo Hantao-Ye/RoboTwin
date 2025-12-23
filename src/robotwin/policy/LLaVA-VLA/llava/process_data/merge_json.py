@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 
 def merge_json_by_config(input_root, config_name, output_file):
     """

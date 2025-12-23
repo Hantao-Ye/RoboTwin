@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Optional, Union
 
 from huggingface_hub import PyTorchModelHubMixin
-from huggingface_hub.constants import (PYTORCH_WEIGHTS_NAME, SAFETENSORS_SINGLE_FILE)
+from huggingface_hub.constants import PYTORCH_WEIGHTS_NAME, SAFETENSORS_SINGLE_FILE
 from huggingface_hub.file_download import hf_hub_download
 from huggingface_hub.utils import EntryNotFoundError, is_torch_available
 

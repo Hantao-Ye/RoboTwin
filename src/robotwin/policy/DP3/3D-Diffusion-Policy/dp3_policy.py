@@ -1,17 +1,18 @@
 if __name__ == "__main__":
-    import sys
     import os
     import pathlib
+    import sys
 
     ROOT_DIR = str(pathlib.Path(__file__).parent.parent.parent)
     sys.path.append(ROOT_DIR)
     os.chdir(ROOT_DIR)
 
 import os
-import hydra
-from omegaconf import OmegaConf
 import pathlib
 import sys
+
+import hydra
+from omegaconf import OmegaConf
 from train_dp3 import TrainDP3Workspace
 
 OmegaConf.register_new_resolver("eval", eval, replace=True)

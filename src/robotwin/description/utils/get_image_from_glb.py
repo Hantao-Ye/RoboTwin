@@ -1,19 +1,18 @@
 import argparse
 import os
 import sys
-import trimesh
+from io import BytesIO
+
+import matplotlib
 import numpy as np
 import PIL.Image
-from io import BytesIO
-import matplotlib
+import trimesh
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import base64
 import random
-from typing import List, Tuple, Optional, Union
 import traceback
+from typing import List, Optional, Tuple, Union
 
 os.environ["PYGLET_HEADLESS"] = "1"
 os.environ["PYOPENGL_PLATFORM"] = "egl"

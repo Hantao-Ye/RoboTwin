@@ -1,7 +1,8 @@
 import torch
 import torchvision.transforms as T
 from PIL import Image
-from torchvision.transforms.functional import  InterpolationMode
+from torchvision.transforms.functional import InterpolationMode
+
 
 def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_size):
     best_ratio_diff = float('inf')

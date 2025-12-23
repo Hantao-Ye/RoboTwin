@@ -1,11 +1,13 @@
+import argparse
+import glob
 import os
 import re
+
+import cv2
 import h5py
 import numpy as np
-import cv2
-import glob
-import argparse
 from PIL import Image
+
 
 def get_task_name(path):
     """

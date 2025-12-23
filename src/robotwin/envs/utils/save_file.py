@@ -1,11 +1,9 @@
-import numpy as np
-from PIL import Image, ImageColor
-
 import json
-
 import os
 import pickle
+
 import open3d as o3d
+from PIL import Image
 
 
 def ensure_dir(file_path):

@@ -1,15 +1,17 @@
-import numpy as np
-import torch
-import hydra
+import os
+import sys
+
 import dill
-import sys, os
+import hydra
+import torch
 
 current_file_path = os.path.abspath(__file__)
 parent_dir = os.path.dirname(current_file_path)
 sys.path.append(parent_dir)
 
-from diffusion_policy.workspace.robotworkspace import RobotWorkspace
 from diffusion_policy.env_runner.dp_runner import DPRunner
+from diffusion_policy.workspace.robotworkspace import RobotWorkspace
+
 
 class DP:
 

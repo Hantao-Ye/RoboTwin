@@ -1,10 +1,9 @@
-from omegaconf import OmegaConf
-from robomimic.config import config_factory
 import robomimic.scripts.generate_paper_configs as gpc
+from robomimic.config import config_factory
 from robomimic.scripts.generate_paper_configs import (
+    modify_config_for_dataset,
     modify_config_for_default_image_exp,
     modify_config_for_default_low_dim_exp,
-    modify_config_for_dataset,
 )
 
 

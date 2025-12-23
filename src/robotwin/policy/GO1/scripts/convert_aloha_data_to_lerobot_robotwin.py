@@ -5,20 +5,19 @@ Script to convert Aloha hdf5 data to the LeRobot dataset v2.1 format.
 """
 
 import dataclasses
-from pathlib import Path
+import fnmatch
+import json
+import os
 import shutil
+from pathlib import Path
 from typing import Literal
 
 import h5py
-from lerobot.common.datasets.lerobot_dataset import HF_LEROBOT_HOME, LeRobotDataset
-
 import numpy as np
 import torch
 import tqdm
 import tyro
-import json
-import os
-import fnmatch
+from lerobot.common.datasets.lerobot_dataset import HF_LEROBOT_HOME, LeRobotDataset
 
 
 @dataclasses.dataclass(frozen=True)

@@ -1,10 +1,12 @@
-import sapien.core as sapien
-import numpy as np
-from pathlib import Path
-import transforms3d as t3d
-import sapien.physx as sapienp
 import json
-import os, re
+import os
+import re
+from pathlib import Path
+
+import numpy as np
+import sapien.core as sapien
+import transforms3d as t3d
+
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 
 from .actor_utils import Actor, ArticulationActor

@@ -25,23 +25,26 @@ import torch
 from torch import nn
 
 from ...activations import ACT2FN
-from ...cache_utils import Cache, DynamicCache
+from ...cache_utils import Cache
+from ...cache_utils import DynamicCache
 from ...generation import GenerationMixin
 from ...masking_utils import create_causal_mask
 from ...modeling_flash_attention_utils import FlashAttentionKwargs
 from ...modeling_layers import GradientCheckpointingLayer
-from ...modeling_outputs import (
-    BaseModelOutputWithPast,
-    CausalLMOutputWithPast,
-    SequenceClassifierOutputWithPast,
-    TokenClassifierOutput,
-)
-from ...modeling_rope_utils import ROPE_INIT_FUNCTIONS, dynamic_rope_update
-from ...modeling_utils import ALL_ATTENTION_FUNCTIONS, PreTrainedModel
+from ...modeling_outputs import BaseModelOutputWithPast
+from ...modeling_outputs import CausalLMOutputWithPast
+from ...modeling_outputs import SequenceClassifierOutputWithPast
+from ...modeling_outputs import TokenClassifierOutput
+from ...modeling_rope_utils import ROPE_INIT_FUNCTIONS
+from ...modeling_rope_utils import dynamic_rope_update
+from ...modeling_utils import ALL_ATTENTION_FUNCTIONS
+from ...modeling_utils import PreTrainedModel
 from ...processing_utils import Unpack
-from ...utils import LossKwargs, auto_docstring, can_return_tuple, logging
+from ...utils import LossKwargs
+from ...utils import auto_docstring
+from ...utils import can_return_tuple
+from ...utils import logging
 from .configuration_gemma import GemmaConfig
-
 
 logger = logging.get_logger(__name__)
 

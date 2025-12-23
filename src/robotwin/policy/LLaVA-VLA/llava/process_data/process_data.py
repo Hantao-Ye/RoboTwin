@@ -1,12 +1,14 @@
-import os
-import re
-import h5py
-import json
-import glob
-import numpy as np
-from pathlib import Path
 import argparse
+import glob
+import json
+import os
 import random
+import re
+from pathlib import Path
+
+import h5py
+import numpy as np
+
 
 def get_task_name_from_path(path):
     match = re.search(r'/data/([^/]+)/', path)

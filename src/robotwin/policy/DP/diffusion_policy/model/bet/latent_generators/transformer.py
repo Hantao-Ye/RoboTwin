@@ -1,14 +1,13 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import einops
+from typing import Tuple
+
 import diffusion_policy.model.bet.latent_generators.latent_generator as latent_generator
-
+import einops
+import torch
+import torch.nn.functional as F
+from diffusion_policy.model.bet.libraries.loss_fn import FocalLoss
 from diffusion_policy.model.diffusion.transformer_for_diffusion import (
-    TransformerForDiffusion, )
-from diffusion_policy.model.bet.libraries.loss_fn import FocalLoss, soft_cross_entropy
-
-from typing import Optional, Tuple
+    TransformerForDiffusion,
+)
 
 
 class Transformer(latent_generator.AbstractLatentGenerator):

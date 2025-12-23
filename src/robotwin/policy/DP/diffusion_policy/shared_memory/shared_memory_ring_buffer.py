@@ -1,16 +1,14 @@
-from typing import Dict, List, Union
-
-from queue import Empty
 import numbers
 import time
 from multiprocessing.managers import SharedMemoryManager
-import numpy as np
+from typing import Dict, List, Union
 
-from diffusion_policy.shared_memory.shared_ndarray import SharedNDArray
+import numpy as np
 from diffusion_policy.shared_memory.shared_memory_util import (
     ArraySpec,
     SharedAtomicCounter,
 )
+from diffusion_policy.shared_memory.shared_ndarray import SharedNDArray
 
 
 class SharedMemoryRingBuffer:

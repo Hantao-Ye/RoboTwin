@@ -1,7 +1,10 @@
 import torch
 import torch.nn as nn
-
-from transformers import WhisperProcessor, WhisperForConditionalGeneration, WhisperConfig
+from transformers import (
+    WhisperConfig,
+    WhisperForConditionalGeneration,
+    WhisperProcessor,
+)
 
 
 class WhisperAudioTower(nn.Module):

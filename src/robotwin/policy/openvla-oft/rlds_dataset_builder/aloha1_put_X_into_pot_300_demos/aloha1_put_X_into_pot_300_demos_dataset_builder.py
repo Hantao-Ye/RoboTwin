@@ -1,13 +1,11 @@
-from typing import Iterator, Tuple, Any
-
-import os
-import h5py
 import glob
+import sys
+from typing import Any, Iterator, Tuple
+
+import h5py
 import numpy as np
-import tensorflow as tf
 import tensorflow_datasets as tfds
-import sys
-import sys
+
 sys.path.append('.')
 from aloha1_put_X_into_pot_300_demos.conversion_utils import MultiThreadedDatasetBuilder
 

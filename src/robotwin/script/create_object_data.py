@@ -1,26 +1,22 @@
-import logging
 import argparse
-import readline
-import importlib
-import numpy as np
-from pathlib import Path
-from copy import deepcopy
-import transforms3d as t3d
-from threading import Thread, Lock
-import trimesh
-import trimesh.bounds
 import json
+import logging
 import os
 import re
+from copy import deepcopy
+from pathlib import Path
+from threading import Thread
 from typing import Literal
 
-import sys
-
-from robotwin.envs.utils import Actor, ArticulationActor
-from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
-
+import numpy as np
 import sapien
+import transforms3d as t3d
+import trimesh
+import trimesh.bounds
 from sapien.render import set_global_config
+
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
+from robotwin.envs.utils import Actor, ArticulationActor
 
 render_pause = False
 

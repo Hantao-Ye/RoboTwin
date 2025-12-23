@@ -1,18 +1,32 @@
-import time
-import numpy as np
 import collections
-import matplotlib.pyplot as plt
-import dm_env
+import time
 
-from experiments.robot.aloha.constants import DT, START_ARM_POSE, MASTER_GRIPPER_JOINT_NORMALIZE_FN, PUPPET_GRIPPER_JOINT_UNNORMALIZE_FN
-from experiments.robot.aloha.constants import PUPPET_GRIPPER_POSITION_NORMALIZE_FN, PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN
-from experiments.robot.aloha.constants import PUPPET_GRIPPER_JOINT_OPEN, PUPPET_GRIPPER_JOINT_CLOSE
-from experiments.robot.aloha.robot_utils import Recorder, ImageRecorder
-from experiments.robot.aloha.robot_utils import setup_master_bot, setup_puppet_bot, move_arms, move_grippers
+import dm_env
+import IPython
+import matplotlib.pyplot as plt
+import numpy as np
 from interbotix_xs_modules.arm import InterbotixManipulatorXS
 from interbotix_xs_msgs.msg import JointSingleCommand
 
-import IPython
+from experiments.robot.aloha.constants import (
+    DT,
+    MASTER_GRIPPER_JOINT_NORMALIZE_FN,
+    PUPPET_GRIPPER_JOINT_CLOSE,
+    PUPPET_GRIPPER_JOINT_OPEN,
+    PUPPET_GRIPPER_JOINT_UNNORMALIZE_FN,
+    PUPPET_GRIPPER_POSITION_NORMALIZE_FN,
+    PUPPET_GRIPPER_VELOCITY_NORMALIZE_FN,
+    START_ARM_POSE,
+)
+from experiments.robot.aloha.robot_utils import (
+    ImageRecorder,
+    Recorder,
+    move_arms,
+    move_grippers,
+    setup_master_bot,
+    setup_puppet_bot,
+)
+
 e = IPython.embed
 
 class RealEnv:

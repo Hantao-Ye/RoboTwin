@@ -1,16 +1,15 @@
 from typing import Dict
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from einops import rearrange, reduce
-from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
 
+import torch
+import torch.nn.functional as F
+from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
+from diffusion_policy.common.pytorch_util import dict_apply
 from diffusion_policy.model.common.normalizer import LinearNormalizer
-from diffusion_policy.policy.base_image_policy import BaseImagePolicy
 from diffusion_policy.model.diffusion.conditional_unet1d import ConditionalUnet1D
 from diffusion_policy.model.diffusion.mask_generator import LowdimMaskGenerator
 from diffusion_policy.model.vision.multi_image_obs_encoder import MultiImageObsEncoder
-from diffusion_policy.common.pytorch_util import dict_apply
+from diffusion_policy.policy.base_image_policy import BaseImagePolicy
+from einops import reduce
 
 
 class DiffusionUnetImagePolicy(BaseImagePolicy):

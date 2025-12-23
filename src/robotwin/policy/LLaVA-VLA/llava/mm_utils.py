@@ -1,14 +1,15 @@
-from PIL import Image
-from io import BytesIO
-import base64
-import torch
-import math
 import ast
+import base64
+import math
 import re
+from io import BytesIO
 
+import torch
 import transformers
+from PIL import Image
 from transformers import StoppingCriteria
-from llava.constants import IMAGE_TOKEN_INDEX, AUDIO_TOKEN_INDEX, GOAL_TOKEN_INDEX
+
+from llava.constants import AUDIO_TOKEN_INDEX, GOAL_TOKEN_INDEX, IMAGE_TOKEN_INDEX
 
 
 def select_best_resolution(original_size, possible_resolutions):

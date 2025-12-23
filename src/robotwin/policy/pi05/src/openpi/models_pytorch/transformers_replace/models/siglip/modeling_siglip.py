@@ -14,26 +14,36 @@
 # limitations under the License.
 """PyTorch Siglip model."""
 
-import math
-import warnings
 from dataclasses import dataclass
+import math
 from typing import Any, Callable, Optional, Union
+import warnings
 
 import numpy as np
 import torch
-import torch.utils.checkpoint
 from torch import nn
-from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
+from torch.nn import BCEWithLogitsLoss
+from torch.nn import CrossEntropyLoss
+from torch.nn import MSELoss
 from torch.nn.init import _calculate_fan_in_and_fan_out
+import torch.utils.checkpoint
 
 from ...activations import ACT2FN
 from ...modeling_attn_mask_utils import _prepare_4d_attention_mask
 from ...modeling_layers import GradientCheckpointingLayer
-from ...modeling_outputs import BaseModelOutput, BaseModelOutputWithPooling, ImageClassifierOutput
-from ...modeling_utils import ALL_ATTENTION_FUNCTIONS, PreTrainedModel
-from ...utils import ModelOutput, auto_docstring, can_return_tuple, logging, torch_int
-from .configuration_siglip import SiglipConfig, SiglipTextConfig, SiglipVisionConfig
-
+from ...modeling_outputs import BaseModelOutput
+from ...modeling_outputs import BaseModelOutputWithPooling
+from ...modeling_outputs import ImageClassifierOutput
+from ...modeling_utils import ALL_ATTENTION_FUNCTIONS
+from ...modeling_utils import PreTrainedModel
+from ...utils import ModelOutput
+from ...utils import auto_docstring
+from ...utils import can_return_tuple
+from ...utils import logging
+from ...utils import torch_int
+from .configuration_siglip import SiglipConfig
+from .configuration_siglip import SiglipTextConfig
+from .configuration_siglip import SiglipVisionConfig
 
 logger = logging.get_logger(__name__)
 

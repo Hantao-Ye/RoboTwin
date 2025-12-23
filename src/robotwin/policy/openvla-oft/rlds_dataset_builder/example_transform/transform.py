@@ -1,7 +1,7 @@
 from typing import Any, Dict
+
 import numpy as np
 from PIL import Image
-
 
 ################################################################################################
 #                                        Target config                                         #

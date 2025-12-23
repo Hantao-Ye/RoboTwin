@@ -1,10 +1,11 @@
+
+import torch
+import torch.distributed as dist
+import torchvision
 from torch import nn
 from torchvision.models._utils import IntermediateLayerGetter
-from typing import Dict, List
-import torchvision
-import torch
 
-import torch.distributed as dist
+
 def is_dist_avail_and_initialized():
     if not dist.is_available():
         return False

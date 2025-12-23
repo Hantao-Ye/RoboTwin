@@ -1,19 +1,17 @@
-import time
+import argparse
 import json
 import os
-import time
-import argparse
-import sys
-import signal
 import random
+import signal
+import sys
+import time
 from multiprocessing import Process
 
 import numpy as np
 import tensorflow as tf
 import yaml
-
-from data.vla_dataset import VLADataset
 from data.filelock import FileLock
+from data.vla_dataset import VLADataset
 
 # Producer does not need GPU
 tf.config.set_visible_devices([], "GPU")
