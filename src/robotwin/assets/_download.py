@@ -11,16 +11,40 @@ def download_assets():
     if not os.path.exists(ASSETS_PATH):
         os.makedirs(ASSETS_PATH)
     
+    # Map zip files to their expected directory names
+    assets_map = {
+        "background_texture.zip": "background_texture",
+        "embodiments.zip": "embodiments",
+        "objects.zip": "objects"
+    }
+    
+    patterns_to_download = []
+    
+    for zip_name, dir_name in assets_map.items():
+        dir_path = os.path.join(ASSETS_PATH, dir_name)
+        if os.path.exists(dir_path):
+            print(f"Asset '{dir_name}' already exists at {dir_path}. Skipping download.")
+        else:
+            patterns_to_download.append(zip_name)
+            
+    if not patterns_to_download:
+        print("All assets are already present.")
+        # We still run the update config path just in case
+        print("Updating embodiment config paths...")
+        update_embodiment_config_path(ASSETS_PATH)
+        return
+
+    print(f"Downloading: {patterns_to_download}")
     snapshot_download(
         repo_id="TianxingChen/RoboTwin2.0",
-        allow_patterns=["background_texture.zip", "embodiments.zip", "objects.zip"],
+        allow_patterns=patterns_to_download,
         local_dir=ASSETS_PATH,
         repo_type="dataset",
         resume_download=True,
     )
 
     # Unzip files
-    for zip_name in ["background_texture.zip", "embodiments.zip", "objects.zip"]:
+    for zip_name in patterns_to_download:
         zip_path = os.path.join(ASSETS_PATH, zip_name)
         if os.path.exists(zip_path):
             print(f"Unzipping {zip_name}...")

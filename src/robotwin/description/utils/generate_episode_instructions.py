@@ -258,19 +258,24 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    setting_file = os.path.join(
-        CONFIGS_PATH, f"{args.setting}.yml"
-    )
+    
+    if args.setting.endswith('.yml') and os.path.exists(args.setting):
+        setting_file = args.setting
+        setting_name = os.path.splitext(os.path.basename(args.setting))[0]
+    else:
+        setting_file = os.path.join(CONFIGS_PATH, f"{args.setting}.yml")
+        setting_name = args.setting
+
     with open(setting_file, "r", encoding="utf-8") as f:
         args_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
 
     # Load scene info and extract episode parameters
-    scene_info = load_scene_info(args.task_name, args.setting, args_dict['save_path'])
+    scene_info = load_scene_info(args.task_name, setting_name, args_dict['save_path'])
     episodes = extract_episodes_from_scene_info(scene_info)
 
     # Generate descriptions
     results = generate_episode_descriptions(args.task_name, episodes, args.max_num)
 
     # Save results to output files
-    save_episode_descriptions(args.task_name, args.setting, results)
+    save_episode_descriptions(args.task_name, setting_name, results)
     print("Successfully Saved Instructions")

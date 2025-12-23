@@ -40,7 +40,13 @@ def get_embodiment_config(robot_file):
 def main(task_name=None, task_config=None):
 
     task = class_decorator(task_name)
-    config_path = os.path.join(CONFIGS_PATH, f"{task_config}.yml")
+    
+    if task_config.endswith('.yml') and os.path.exists(task_config):
+        config_path = task_config
+        task_config_name = os.path.splitext(os.path.basename(task_config))[0]
+    else:
+        config_path = os.path.join(CONFIGS_PATH, f"{task_config}.yml")
+        task_config_name = task_config
 
     with open(config_path, "r", encoding="utf-8") as f:
         args = yaml.load(f.read(), Loader=yaml.FullLoader)
@@ -58,13 +64,13 @@ def main(task_name=None, task_config=None):
         if robot_file is None:
             raise "missing embodiment files"
         
-        # Replace hardcoded assets path with ASSETS_PATH
+        # Handle legacy paths starting with assets/ or ./assets/
         if robot_file.startswith("./assets/"):
-            robot_file = robot_file.replace("./assets/", ASSETS_PATH)
+            robot_file = robot_file[9:]
         elif robot_file.startswith("assets/"):
-            robot_file = robot_file.replace("assets/", ASSETS_PATH)
+            robot_file = robot_file[7:]
             
-        return robot_file
+        return os.path.join(ASSETS_PATH, robot_file)
 
     if len(embodiment_type) == 1:
         args["left_robot_file"] = get_embodiment_file(embodiment_type[0])
@@ -106,12 +112,12 @@ def main(task_name=None, task_config=None):
     print("\n==================================")
 
     args["embodiment_name"] = embodiment_name
-    args['task_config'] = task_config
+    args['task_config'] = task_config_name
     args["save_path"] = os.path.join(args["save_path"], str(args["task_name"]), args["task_config"])
-    run(task, args)
+    run(task, args, original_task_config=task_config)
 
 
-def run(TASK_ENV, args):
+def run(TASK_ENV, args, original_task_config=None):
     epid, suc_num, fail_num, seed_list = 0, 0, 0, []
 
     print(f"Task Name: \033[34m{args['task_name']}\033[0m")
@@ -242,7 +248,9 @@ def run(TASK_ENV, args):
         
         import subprocess
         script_path = os.path.join(DESCRIPTION_PATH, "utils", "generate_episode_instructions.py")
-        subprocess.run([sys.executable, script_path, args['task_name'], args['task_config'], str(args['language_num'])], check=True)
+        # Use original_task_config if available, otherwise fall back to args['task_config']
+        config_arg = original_task_config if original_task_config else args['task_config']
+        subprocess.run([sys.executable, script_path, args['task_name'], config_arg, str(args['language_num'])], check=True)
 
 
 if __name__ == "__main__":

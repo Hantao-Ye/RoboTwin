@@ -1029,7 +1029,7 @@ class URDFViewer(BaseViewer):
             pass
 
 def auto_loader(model_name: str):
-    model_dir = Path("./assets/objects/") / model_name
+    model_dir = Path(ASSETS_PATH) / "objects" / model_name
     collision = model_dir / "collision"
     visual    = model_dir / "visual"
 
