@@ -5,9 +5,9 @@ import os
 import argparse
 import random
 import yaml
+from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH, DESCRIPTION_PATH
 
-current_file_path = os.path.abspath(__file__)
-parent_directory = os.path.dirname(current_file_path)
+
 
 
 def extract_placeholders(instruction: str) -> List[str]:
@@ -57,7 +57,7 @@ def replace_placeholders(instruction: str, episode_params: Dict[str, str]) -> st
         # Check if the value contains '\' or '/'
         if "\\" in value or "/" in value:
             json_path = os.path.join(
-                os.path.join(parent_directory, "../objects_description"),
+                os.path.join(DESCRIPTION_PATH, "objects_description"),
                 value + ".json",
             )
             if not os.path.exists(json_path):
@@ -65,7 +65,7 @@ def replace_placeholders(instruction: str, episode_params: Dict[str, str]) -> st
                 exit()
 
         # Check if the value is a path to an existing JSON file
-        json_path = os.path.join(os.path.join(parent_directory, "../objects_description"), value + ".json")
+        json_path = os.path.join(os.path.join(DESCRIPTION_PATH, "objects_description"), value + ".json")
         if os.path.exists(json_path):
             with open(json_path, "r") as f:
                 json_data = json.load(f)
@@ -97,7 +97,7 @@ def replace_placeholders_unseen(instruction: str, episode_params: Dict[str, str]
         # Check if the value contains '\' or '/'
         if "\\" in value or "/" in value:
             json_path = os.path.join(
-                os.path.join(parent_directory, "../objects_description"),
+                os.path.join(DESCRIPTION_PATH, "objects_description"),
                 value + ".json",
             )
             if not os.path.exists(json_path):
@@ -105,7 +105,7 @@ def replace_placeholders_unseen(instruction: str, episode_params: Dict[str, str]
                 exit()
 
         # Check if the value is a path to an existing JSON file
-        json_path = os.path.join(os.path.join(parent_directory, "../objects_description"), value + ".json")
+        json_path = os.path.join(os.path.join(DESCRIPTION_PATH, "objects_description"), value + ".json")
         if os.path.exists(json_path):
             with open(json_path, "r") as f:
                 json_data = json.load(f)
@@ -130,7 +130,7 @@ def replace_placeholders_unseen(instruction: str, episode_params: Dict[str, str]
 
 def load_task_instructions(task_name: str) -> Dict[str, Any]:
     """Load the task instructions from the JSON file."""
-    file_path = os.path.join(parent_directory, f"../task_instruction/{task_name}.json")
+    file_path = os.path.join(DESCRIPTION_PATH, f"task_instruction/{task_name}.json")
     with open(file_path, "r") as f:
         task_data = json.load(f)
     return task_data
@@ -138,7 +138,7 @@ def load_task_instructions(task_name: str) -> Dict[str, Any]:
 
 def load_scene_info(task_name: str, setting: str, scene_info_path: str) -> Dict[str, Dict]:
     """Load the scene info from the JSON file in the data directory."""
-    file_path = os.path.join(parent_directory, f"../../{scene_info_path}/{task_name}/{setting}/scene_info.json")
+    file_path = os.path.join(scene_info_path, f"{task_name}/{setting}/scene_info.json")
     try:
         with open(file_path, "r") as f:
             scene_data = json.load(f)
@@ -164,7 +164,7 @@ def extract_episodes_from_scene_info(scene_info: Dict) -> List[Dict[str, str]]:
 
 def save_episode_descriptions(task_name: str, setting: str, generated_descriptions: List[Dict]):
     """Save generated descriptions to output files."""
-    output_dir = os.path.join(parent_directory, f"../../data/{task_name}/{setting}/instructions")
+    output_dir = os.path.join("data", task_name, setting, "instructions")
     os.makedirs(output_dir, exist_ok=True)
 
     for episode_desc in generated_descriptions:
@@ -259,7 +259,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     setting_file = os.path.join(
-        parent_directory, f"../../task_config/{args.setting}.yml"
+        CONFIGS_PATH, f"{args.setting}.yml"
     )
     with open(setting_file, "r", encoding="utf-8") as f:
         args_dict = yaml.load(f.read(), Loader=yaml.FullLoader)

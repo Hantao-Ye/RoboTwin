@@ -12,8 +12,6 @@ import trimesh.bounds
 
 import sys
 
-sys.path.append(".")
-sys.path.append("./src")
 from robotwin.envs.utils import *
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH
 
