@@ -153,7 +153,7 @@ class Base_Task(gym.Env):
                 try:
                     data = yaml.safe_load(f)
                     self.step_lim = data[self.task_name]
-                except:
+                except Exception:
                     print(f"{self.task_name} not in step limit file, set to 1000")
                     self.step_lim = 1000
 
@@ -568,7 +568,7 @@ class Base_Task(gym.Env):
         try:
             shutil.rmtree(folder_path)
             print(f"{GREEN}Folder {folder_path} deleted successfully.{RESET}")
-        except OSError as e:
+        except OSError:
             print(f"{RED}Error: {folder_path} is not empty or does not exist.{RESET}")
 
     def set_instruction(self, instruction=None):
@@ -752,7 +752,7 @@ class Base_Task(gym.Env):
         if pose is None:
             self.plan_success = False
             return
-        if type(pose) == sapien.Pose:
+        if isinstance(pose, sapien.Pose):
             pose = pose.p.tolist() + pose.q.tolist()
 
         if self.need_plan:
@@ -785,7 +785,7 @@ class Base_Task(gym.Env):
         if pose is None:
             self.plan_success = False
             return
-        if type(pose) == sapien.Pose:
+        if isinstance(pose, sapien.Pose):
             pose = pose.p.tolist() + pose.q.tolist()
 
         if self.need_plan:
@@ -820,9 +820,9 @@ class Base_Task(gym.Env):
         if left_target_pose is None or right_target_pose is None:
             self.plan_success = False
             return
-        if type(left_target_pose) == sapien.Pose:
+        if isinstance(left_target_pose, sapien.Pose):
             left_target_pose = left_target_pose.p.tolist() + left_target_pose.q.tolist()
-        if type(right_target_pose) == sapien.Pose:
+        if isinstance(right_target_pose, sapien.Pose):
             right_target_pose = (right_target_pose.p.tolist() + right_target_pose.q.tolist())
         save_freq = self.save_freq if save_freq == -1 else save_freq
         if self.need_plan:
@@ -842,12 +842,12 @@ class Base_Task(gym.Env):
             if not left_success or not right_success:
                 self.plan_success = False
                 # return TODO
-        except Exception as e:
+        except Exception:
             if left_result is None or right_result is None:
                 self.plan_success = False
                 return  # TODO
 
-        if save_freq != None:
+        if save_freq is not None:
             self._take_picture()
 
         now_left_id = 0
@@ -883,12 +883,12 @@ class Base_Task(gym.Env):
                 self._update_render()
                 self.viewer.render()
 
-            if save_freq != None and i % save_freq == 0:
+            if save_freq is not None and i % save_freq == 0:
                 self._update_render()
                 self._take_picture()
             i += 1
 
-        if save_freq != None:
+        if save_freq is not None:
             self._take_picture()
 
     def move(
@@ -1083,7 +1083,7 @@ class Base_Task(gym.Env):
             now_score = 0
             if not (contact_point[1] < -0.1 and pose[2] < 0.85 or contact_point[1] > 0.05 and pose[2] > 0.92):
                 now_score -= 1
-            quat_dis = cal_quat_dis(pose[-4:], GRASP_DIRECTION_DIC[str(arm_tag) + "_arm_perf"])
+            cal_quat_dis(pose[-4:], GRASP_DIRECTION_DIC[str(arm_tag) + "_arm_perf"])
 
         return self.get_grasp_pose(actor, arm_tag, pre_dis=pre_dis)
 
@@ -1135,7 +1135,7 @@ class Base_Task(gym.Env):
             return plan_func(pose)["status"] == "Success"
 
         if contact_point_id is not None:
-            if type(contact_point_id) != list:
+            if not isinstance(contact_point_id, list):
                 contact_point_id = [contact_point_id]
             contact_point_id = [(i, None) for i in contact_point_id]
         else:
@@ -1185,7 +1185,7 @@ class Base_Task(gym.Env):
     ):
         if not self.plan_success:
             return None, []
-        if self.need_plan == False:
+        if not self.need_plan:
             if pre_grasp_dis == grasp_dis:
                 return arm_tag, [
                     Action(arm_tag, "move", target_pose=[0, 0, 0, 0, 0, 0, 0]),
@@ -1427,7 +1427,7 @@ class Base_Task(gym.Env):
         )
 
         save_freq = self.save_freq if save_freq == -1 else save_freq
-        if save_freq != None:
+        if save_freq is not None:
             self._take_picture()
 
         max_control_len = 0
@@ -1477,11 +1477,11 @@ class Base_Task(gym.Env):
                 self._update_render()
                 self.viewer.render()
 
-            if save_freq != None and control_idx % save_freq == 0:
+            if save_freq is not None and control_idx % save_freq == 0:
                 self._update_render()
                 self._take_picture()
 
-        if save_freq != None:
+        if save_freq is not None:
             self._take_picture()
 
         return True  # TODO: maybe need try error
@@ -1556,7 +1556,7 @@ class Base_Task(gym.Env):
                 left_result = dict()
                 left_result["position"], left_result["velocity"] = left_pos, left_vel
                 left_n_step = left_result["position"].shape[0]
-            except Exception as e:
+            except Exception:
                 # print("left arm TOPP error: ", e)
                 topp_left_flag = False
                 left_n_step = 50  # fixed
@@ -1572,7 +1572,7 @@ class Base_Task(gym.Env):
                 right_result = dict()
                 right_result["position"], right_result["velocity"] = right_pos, right_vel
                 right_n_step = right_result["position"].shape[0]
-            except Exception as e:
+            except Exception:
                 # print("right arm TOPP error: ", e)
                 topp_right_flag = False
                 right_n_step = 50  # fixed
