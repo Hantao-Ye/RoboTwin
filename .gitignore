@@ -1,30 +1,129 @@
-models/
-data/*
-!data/process_stuck.py
+# Python
 __pycache__/
-**/checkpoints/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# VS Code
+.vscode/
+
+# Project specific
+data/*
+!data/.gitkeep
+models/
 result/
-envs/curobo
-*.zip
-viewer_show.*
-eval_video/
-task_config/
-**/.DS_Store
-
-# eval result
 eval_result/
+eval_video/
+viewer_show.*
 
-# Code Generation
-assets/*
-!assets/_download.py
-!assets/files
+# Assets (Downloaded content)
+src/robotwin/assets/*
+!src/robotwin/assets/_download.py
+!src/robotwin/assets/files/
+!src/robotwin/assets/__init__.py
 
-policy/weights/*
+# Task Configs (if generated)
+# task_config/
 
+# Curobo
+envs/curobo
 envs/curobo/*
 
-.vscode
-/config.json
+# Mac
+.DS_Store
 
+# Misc
 /*.json*
 /*.txt
