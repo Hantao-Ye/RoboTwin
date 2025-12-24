@@ -20,7 +20,7 @@ def images_encoding(imgs):
     # padding
     for i in range(len(imgs)):
         padded_data.append(encode_data[i].ljust(max_len, b"\0"))
-    return encode_data, max_len
+    return padded_data, max_len
 
 
 def parse_dict_structure(data):
