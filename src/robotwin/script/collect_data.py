@@ -8,13 +8,14 @@ from argparse import ArgumentParser
 import yaml
 
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH, CONFIGS_PATH, DESCRIPTION_PATH
+from robotwin.envs._base_task import Base_Task
 from robotwin.envs.utils import UnStableError
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
 
 
-def class_decorator(task_name):
+def class_decorator(task_name) -> Base_Task:
     try:
         envs_module = importlib.import_module(f"robotwin.envs.{task_name}")
     except ImportError as e:
@@ -101,9 +102,9 @@ def main(task_name=None, task_config=None):
     print("\033[95mRandom Table Height:\033[0m " + str(args["domain_randomization"]["random_table_height"]))
     print("\033[95mRandom Head Camera Distance:\033[0m " + str(args["domain_randomization"]["random_head_camera_dis"]))
 
-    print("\033[94mHead Camera Config:\033[0m " + str(args["camera"]["head_camera_type"]) + f", " +
+    print("\033[94mHead Camera Config:\033[0m " + str(args["camera"]["head_camera_type"]) + ", " +
           str(args["camera"]["collect_head_camera"]))
-    print("\033[94mWrist Camera Config:\033[0m " + str(args["camera"]["wrist_camera_type"]) + f", " +
+    print("\033[94mWrist Camera Config:\033[0m " + str(args["camera"]["wrist_camera_type"]) + ", " +
           str(args["camera"]["collect_wrist_camera"]))
     print("\033[94mEmbodiment Config:\033[0m " + embodiment_name)
     print("\n==================================")
@@ -114,7 +115,7 @@ def main(task_name=None, task_config=None):
     run(task, args, original_task_config=task_config)
 
 
-def run(TASK_ENV, args, original_task_config=None):
+def run(TASK_ENV: Base_Task, args, original_task_config=None):
     epid, suc_num, fail_num, seed_list = 0, 0, 0, []
 
     print(f"Task Name: \033[34m{args['task_name']}\033[0m")
@@ -251,7 +252,7 @@ def run(TASK_ENV, args, original_task_config=None):
 
 
 if __name__ == "__main__":
-    from test_render import Sapien_TEST
+    from robotwin.script.test_render import Sapien_TEST
     Sapien_TEST()
 
     import torch.multiprocessing as mp
