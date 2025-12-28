@@ -92,8 +92,23 @@ class Camera:
             vector = np.random.randn(3)
             random_dir = vector / np.linalg.norm(vector)
             cam_pos = cam_pos + random_dir * np.random.uniform(low=0, high=random_head_camera_dis)
-            cam_forward = np.array(camera_info["forward"]) / np.linalg.norm(np.array(camera_info["forward"]))
-            cam_left = np.array(camera_info["left"]) / np.linalg.norm(np.array(camera_info["left"]))
+
+            if "look_at" in camera_info:
+                target = np.array(camera_info["look_at"])
+                cam_forward = target - cam_pos
+                cam_forward = cam_forward / np.linalg.norm(cam_forward)
+                
+                # Calculate left vector assuming Z-up world
+                world_up = np.array([0, 0, 1])
+                cam_left = np.cross(world_up, cam_forward)
+                if np.linalg.norm(cam_left) < 1e-3:
+                    cam_left = np.array([-1, 0, 0]) # Fallback
+                else:
+                    cam_left = cam_left / np.linalg.norm(cam_left)
+            else:
+                cam_forward = np.array(camera_info["forward"]) / np.linalg.norm(np.array(camera_info["forward"]))
+                cam_left = np.array(camera_info["left"]) / np.linalg.norm(np.array(camera_info["left"]))
+            
             up = np.cross(cam_forward, cam_left)
             mat44 = np.eye(4)
             mat44[:3, :3] = np.stack([cam_forward, cam_left, up], axis=1)
@@ -185,26 +200,11 @@ class Camera:
                     self.static_camera_name.append(camera_info["name"])
                     # self.static_sensor_camera_list.append(sensor_camera)
                     self.static_camera_config.append(camera_config)
-                    # ================================= sensor camera =================================
-                    # camera_config = get_camera_config(camera_info['type'])
-                    # cam_pos = np.array(camera_info['position'])
-                    # cam_forward = np.array(camera_info['forward']) / np.linalg.norm(np.array(camera_info['forward']))
-                    # cam_left = np.array(camera_info['left']) / np.linalg.norm(np.array(camera_info['left']))
-                    # up = np.cross(cam_forward, cam_left)
-                    # mat44 = np.eye(4)
-                    # mat44[:3, :3] = np.stack([cam_forward, cam_left, up], axis=1)
-                    # mat44[:3, 3] = cam_pos
-                    # sensor_config = StereoDepthSensorConfig()
-                    # sensor_config.rgb_resolution = (camera_config['w'], camera_config['h'])
-
-                    # self.head_sensor = StereoDepthSensor(
-                    #     sensor_config,
-                    #     sensor_mount_actor,
-                    #     sapien.Pose(mat44)
-                    # )
             else:
-                # camera, sensor_camera, camera_config = create_camera(camera_info)
-                camera, camera_config = create_camera(camera_info)
+                # Apply randomization to other static cameras as well if configured
+                # Use the same random_head_camera_dis for now, or could be a separate config
+                camera, camera_config = create_camera(camera_info, 
+                                                      random_head_camera_dis=self.random_head_camera_dis)
                 self.static_camera_list.append(camera)
                 self.static_camera_name.append(camera_info["name"])
                 # self.static_sensor_camera_list.append(sensor_camera)
@@ -532,28 +532,39 @@ class Camera:
 
             return np.hstack((points_world_np, points_color_np))
 
-        if self.head_camera_id is None:
-            print("No head camera in static camera list, pointcloud save error!")
-            return None
+        # if self.head_camera_id is None:
+        #     print("No head camera in static camera list, pointcloud save error!")
+        #     return None
 
-        combined_pcd = np.array([])
+        pcd_list = []
 
         # Merge pointcloud
         if if_combine:
-            # combined_pcd = np.vstack((head_pcd , left_pcd , right_pcd, front_pcd))
             if self.collect_wrist_camera:
-                combined_pcd = np.vstack((
-                    _get_camera_pcd(self.left_camera),
-                    _get_camera_pcd(self.right_camera),
-                ))
+                pcd_list.append(_get_camera_pcd(self.left_camera))
+                pcd_list.append(_get_camera_pcd(self.right_camera))
+            
             for camera, camera_name in zip(self.static_camera_list, self.static_camera_name):
                 if camera_name == "head_camera":
                     if self.collect_head_camera:
-                        combined_pcd = np.vstack((combined_pcd, _get_camera_pcd(camera)))
+                        pcd_list.append(_get_camera_pcd(camera))
                 else:
-                    combined_pcd = np.vstack((combined_pcd, _get_camera_pcd(camera)))
-        elif self.collect_head_camera:
-            combined_pcd = _get_camera_pcd(self.static_camera_list[self.head_camera_id])
+                    pcd_list.append(_get_camera_pcd(camera))
+        else:
+            # Try to use head camera if available
+            if self.head_camera_id is not None and self.collect_head_camera:
+                pcd_list.append(_get_camera_pcd(self.static_camera_list[self.head_camera_id]))
+            # Fallback to first available static camera
+            elif len(self.static_camera_list) > 0:
+                pcd_list.append(_get_camera_pcd(self.static_camera_list[0]))
+            # Fallback to wrist camera
+            elif self.collect_wrist_camera:
+                pcd_list.append(_get_camera_pcd(self.left_camera))
+        
+        if len(pcd_list) > 0:
+            combined_pcd = np.vstack(pcd_list)
+        else:
+            combined_pcd = np.zeros((0, 6))
         
         def pad_array(numpy_array, target_num):
             current_num = numpy_array.shape[0]
