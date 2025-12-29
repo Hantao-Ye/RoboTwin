@@ -18,12 +18,32 @@ def download_assets():
         "embodiments.zip": "embodiments",
         "objects.zip": "objects"
     }
+
+    # Check environment variable to skip textures
+    if os.environ.get("ROBOTWIN_DOWNLOAD_TEXTURES", "true").lower() == "false":
+        print("Skipping background_texture download (ROBOTWIN_DOWNLOAD_TEXTURES=false)")
+        assets_map.pop("background_texture.zip", None)
     
     patterns_to_download = []
     
     for zip_name, dir_name in assets_map.items():
         dir_path = os.path.join(ASSETS_PATH, dir_name)
+        
+        # Special check for embodiments: ensure standard robots exist
+        # If only custom robots exist, we still need to download the standard ones
+        should_skip = False
         if os.path.exists(dir_path):
+            if dir_name == "embodiments":
+                # Check for a standard robot (e.g., ur5-wsg)
+                if os.path.exists(os.path.join(dir_path, "ur5-wsg")):
+                    should_skip = True
+                else:
+                    print(f"Standard embodiments missing in {dir_path}. Will download.")
+                    should_skip = False
+            else:
+                should_skip = True
+
+        if should_skip:
             print(f"Asset '{dir_name}' already exists at {dir_path}. Skipping download.")
         else:
             patterns_to_download.append(zip_name)
@@ -110,10 +130,23 @@ def update_embodiment_config_path(assets_path):
             new_content = new_content.replace('${ASSETS_PATH}', assets_path)
             new_content = new_content.replace('$ASSETS_PATH', assets_path)
 
-            with open(target_file, 'w') as f:
-                f.write(new_content)
+            # Check if update is needed to avoid unnecessary writes (helps with read-only filesystems)
+            needs_write = True
+            if os.path.exists(target_file):
+                try:
+                    with open(target_file, 'r') as f:
+                        existing_content = f.read()
+                    if existing_content == new_content:
+                        needs_write = False
+                        print_color(f"  - No changes needed for {target_file}", GREEN)
+                except Exception:
+                    pass # If read fails, assume we need to write
 
-            print_color(f"  ✓ Successfully replaced ${{ASSETS_PATH}} -> {assets_path}", GREEN)
+            if needs_write:
+                with open(target_file, 'w') as f:
+                    f.write(new_content)
+                print_color(f"  ✓ Successfully replaced ${{ASSETS_PATH}} -> {assets_path}", GREEN)
+            
             count_updated += 1
 
         except Exception as e:

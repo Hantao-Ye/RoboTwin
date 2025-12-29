@@ -5,7 +5,12 @@ ROOT_PATH = os.path.abspath(__file__)
 ROOT_PATH = ROOT_PATH[:ROOT_PATH.rfind("/")]
 ROOT_PATH = ROOT_PATH[:ROOT_PATH.rfind("/") + 1]
 
-ASSETS_PATH = os.path.join(ROOT_PATH, "assets/")
+# Allow overriding ASSETS_PATH via environment variable (useful for Singularity/Container usage)
+if "ROBOTWIN_ASSETS_PATH" in os.environ:
+    ASSETS_PATH = os.environ["ROBOTWIN_ASSETS_PATH"]
+else:
+    ASSETS_PATH = os.path.join(ROOT_PATH, "assets/")
+
 EMBODIMENTS_PATH = os.path.join(ASSETS_PATH, "embodiments/")
 TEXTURES_PATH = os.path.join(ASSETS_PATH, "background_texture/")
 CONFIGS_PATH = os.path.join(ROOT_PATH, "task_config/")

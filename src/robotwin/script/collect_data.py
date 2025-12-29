@@ -35,7 +35,7 @@ def get_embodiment_config(robot_file):
     return embodiment_args
 
 
-def main(task_name=None, task_config=None):
+def main(task_name=None, task_config=None, episode_num=None):
 
     task = class_decorator(task_name)
     
@@ -50,6 +50,11 @@ def main(task_name=None, task_config=None):
         args = yaml.load(f.read(), Loader=yaml.FullLoader)
 
     args['task_name'] = task_name
+    
+    # Override episode_num if provided via CLI
+    if episode_num is not None:
+        print(f"Overriding episode_num from config ({args.get('episode_num')}) with CLI argument: {episode_num}")
+        args['episode_num'] = int(episode_num)
 
     embodiment_type = args.get("embodiment")
     embodiment_config_path = os.path.join(CONFIGS_PATH, "_embodiment_config.yml")
@@ -261,8 +266,10 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("task_name", type=str)
     parser.add_argument("task_config", type=str)
+    parser.add_argument("--episode_num", type=int, default=None, help="Override number of episodes to generate")
     parser = parser.parse_args()
     task_name = parser.task_name
     task_config = parser.task_config
+    episode_num = parser.episode_num
 
-    main(task_name=task_name, task_config=task_config)
+    main(task_name=task_name, task_config=task_config, episode_num=episode_num)
