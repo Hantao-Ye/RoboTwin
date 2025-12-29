@@ -34,7 +34,7 @@ fi
 
 # Run data collection
 # PYTHONWARNINGS=ignore::UserWarning suppresses specific warnings for cleaner output
-PYTHONWARNINGS=ignore::UserWarning \
+PYTHONWARNINGS=ignore::UserWarning,ignore::SyntaxWarning \
 eval $CMD $PY_ARGS
 
 # Clean up cache
