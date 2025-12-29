@@ -64,7 +64,10 @@ class Camera:
         # with open(robot_config_file, 'r', encoding='utf-8') as f:
         #     embodiment_args = yaml.load(f.read(), Loader=yaml.FullLoader)
         # TODO
-        self.static_camera_info_list = kwags["left_embodiment_config"]["static_camera_list"]
+        if "static_camera_list" in kwags["left_embodiment_config"]:
+            self.static_camera_info_list = kwags["left_embodiment_config"]["static_camera_list"]
+        else:
+            self.static_camera_info_list = kwags["right_embodiment_config"]["static_camera_list"]
         self.static_camera_num = len(self.static_camera_info_list)
 
     def load_camera(self, scene):

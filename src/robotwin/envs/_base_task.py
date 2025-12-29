@@ -78,6 +78,9 @@ class Base_Task(gym.Env):
         self.save_data = kwags.get("save_data", False)
         self.dual_arm = kwags.get("dual_arm", True)
         self.eval_mode = kwags.get("eval_mode", False)
+        self.dynamic_single_arm_visibility = kwags.get("dynamic_single_arm_visibility", False)
+        self.has_set_visibility = False
+        self.active_arm_tag = None
 
         self.need_topp = True  # TODO
 
@@ -402,12 +405,14 @@ class Base_Task(gym.Env):
         else:
             self.robot.reset(self.scene, self.need_topp, **kwags)
 
-        for link in self.robot.left_entity.get_links():
-            link: sapien.physx.PhysxArticulationLinkComponent = link
-            link.set_mass(1)
-        for link in self.robot.right_entity.get_links():
-            link: sapien.physx.PhysxArticulationLinkComponent = link
-            link.set_mass(1)
+        if self.robot.left_entity:
+            for link in self.robot.left_entity.get_links():
+                link: sapien.physx.PhysxArticulationLinkComponent = link
+                link.set_mass(1)
+        if self.robot.right_entity:
+            for link in self.robot.right_entity.get_links():
+                link: sapien.physx.PhysxArticulationLinkComponent = link
+                link.set_mass(1)
 
     def load_camera(self, **kwags):
         """
@@ -558,7 +563,14 @@ class Base_Task(gym.Env):
         # print('Merging pkl to hdf5: ', cache_path, ' -> ', target_file_path)
 
         os.makedirs(f"{self.save_dir}/data", exist_ok=True)
-        process_folder_to_hdf5_video(cache_path, target_file_path, target_video_path)
+
+        metadata = {}
+        if "info" in self.info and "{a}" in self.info["info"]:
+            metadata["arm_tag"] = self.info["info"]["{a}"]
+        elif self.active_arm_tag is not None:
+            metadata["arm_tag"] = self.active_arm_tag
+
+        process_folder_to_hdf5_video(cache_path, target_file_path, target_video_path, metadata=metadata)
 
     def remove_data_cache(self):
         folder_path = self.folder_path["cache"]
@@ -626,33 +638,39 @@ class Base_Task(gym.Env):
 
         if set_tag == "left" or set_tag == "together":
             left_result = self.robot.left_plan_grippers(self.robot.get_left_gripper_val(), left_pos)
-            left_gripper_step = left_result["per_step"]
-            left_gripper_res = left_result["result"]
-            num_step = left_result["num_step"]
-            left_result["result"] = np.pad(
-                left_result["result"],
-                (0, int(alpha * num_step)),
-                mode="constant",
-                constant_values=left_gripper_res[-1],
-            )  # append
-            left_result["num_step"] += int(alpha * num_step)
-            if set_tag == "left":
-                return left_result
+            if left_result is not None:
+                left_gripper_step = left_result["per_step"]
+                left_gripper_res = left_result["result"]
+                num_step = left_result["num_step"]
+                left_result["result"] = np.pad(
+                    left_result["result"],
+                    (0, int(alpha * num_step)),
+                    mode="constant",
+                    constant_values=left_gripper_res[-1],
+                )  # append
+                left_result["num_step"] += int(alpha * num_step)
+                if set_tag == "left":
+                    return left_result
+            elif set_tag == "left":
+                return None
 
         if set_tag == "right" or set_tag == "together":
             right_result = self.robot.right_plan_grippers(self.robot.get_right_gripper_val(), right_pos)
-            right_gripper_step = right_result["per_step"]
-            right_gripper_res = right_result["result"]
-            num_step = right_result["num_step"]
-            right_result["result"] = np.pad(
-                right_result["result"],
-                (0, int(alpha * num_step)),
-                mode="constant",
-                constant_values=right_gripper_res[-1],
-            )  # append
-            right_result["num_step"] += int(alpha * num_step)
-            if set_tag == "right":
-                return right_result
+            if right_result is not None:
+                right_gripper_step = right_result["per_step"]
+                right_gripper_res = right_result["result"]
+                num_step = right_result["num_step"]
+                right_result["result"] = np.pad(
+                    right_result["result"],
+                    (0, int(alpha * num_step)),
+                    mode="constant",
+                    constant_values=right_gripper_res[-1],
+                )  # append
+                right_result["num_step"] += int(alpha * num_step)
+                if set_tag == "right":
+                    return right_result
+            elif set_tag == "right":
+                return None
 
         return left_result, right_result
 
@@ -900,6 +918,15 @@ class Base_Task(gym.Env):
         """
         Take action for the robot.
         """
+        if self.dynamic_single_arm_visibility and not self.has_set_visibility:
+            if actions_by_arm2 is None:
+                active_arm = actions_by_arm1[0]
+                self.active_arm_tag = str(active_arm)
+                if active_arm == "left":
+                    self.robot.set_arm_visibility("right", False)
+                else:
+                    self.robot.set_arm_visibility("left", False)
+                self.has_set_visibility = True
 
         def get_actions(actions, arm_tag: ArmTag) -> list[Action]:
             if actions[1] is None:

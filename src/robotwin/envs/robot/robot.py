@@ -134,6 +134,39 @@ class Robot:
 
         self.init_joints()
 
+    def set_arm_visibility(self, arm_tag, visible: bool):
+        visibility = 1.0 if visible else 0.0
+        
+        def set_link_visibility(link):
+            if link.entity:
+                rc = link.entity.find_component_by_type(sapien.render.RenderBodyComponent)
+                if rc:
+                    rc.visibility = visibility
+
+        if self.is_dual_arm:
+            joints = self.left_arm_joints if arm_tag == "left" else self.right_arm_joints
+            gripper = self.left_gripper if arm_tag == "left" else self.right_gripper
+            
+            links_to_hide = []
+            
+            for joint in joints:
+                if joint and joint.child_link:
+                    links_to_hide.append(joint.child_link)
+            
+            for g in gripper:
+                joint = g[0]
+                if joint and joint.child_link:
+                    links_to_hide.append(joint.child_link)
+            
+            for link in links_to_hide:
+                set_link_visibility(link)
+                    
+        else:
+            entity = self.left_entity if arm_tag == "left" else self.right_entity
+            if entity:
+                for link in entity.get_links():
+                    set_link_visibility(link)
+
     def get_grasp_perfect_direction(self, arm_tag):
         if arm_tag == "left":
             return self.left_perfect_direction
