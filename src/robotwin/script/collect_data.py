@@ -6,6 +6,7 @@ import time
 from argparse import ArgumentParser
 
 import yaml
+from tqdm import tqdm
 
 from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH, CONFIGS_PATH, DESCRIPTION_PATH
 from robotwin.envs._base_task import Base_Task
@@ -141,18 +142,20 @@ def run(TASK_ENV: Base_Task, args, original_task_config=None):
                     epid = max(seed_list) + 1
             print(f"Exist seed file, Start from: {epid} / {suc_num}")
 
+        pbar = tqdm(total=args["episode_num"], initial=suc_num, desc="Seed Collection")
         while suc_num < args["episode_num"]:
             try:
                 TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid, **args)
                 TASK_ENV.play_once()
 
                 if TASK_ENV.plan_success and TASK_ENV.check_success():
-                    print(f"simulate data episode {suc_num} success! (seed = {epid})")
+                    # print(f"simulate data episode {suc_num} success! (seed = {epid})")
                     seed_list.append(epid)
                     TASK_ENV.save_traj_data(suc_num)
                     suc_num += 1
+                    pbar.update(1)
                 else:
-                    print(f"simulate data episode {suc_num} fail! (seed = {epid})")
+                    # print(f"simulate data episode {suc_num} fail! (seed = {epid})")
                     fail_num += 1
 
                 TASK_ENV.close_env()
@@ -160,10 +163,10 @@ def run(TASK_ENV: Base_Task, args, original_task_config=None):
                 if args["render_freq"]:
                     TASK_ENV.viewer.close()
             except UnStableError as e:
-                print(" -------------")
-                print(f"simulate data episode {suc_num} fail! (seed = {epid})")
-                print("Error: ", e)
-                print(" -------------")
+                # print(" -------------")
+                # print(f"simulate data episode {suc_num} fail! (seed = {epid})")
+                # print("Error: ", e)
+                # print(" -------------")
                 fail_num += 1
                 TASK_ENV.close_env()
 
@@ -172,22 +175,25 @@ def run(TASK_ENV: Base_Task, args, original_task_config=None):
                 time.sleep(0.3)
             except Exception as e:
                 # stack_trace = traceback.format_exc()
-                print(" -------------")
-                print(f"simulate data episode {suc_num} fail! (seed = {epid})")
-                print("Error: ", e)
-                print(" -------------")
+                # print(" -------------")
+                # print(f"simulate data episode {suc_num} fail! (seed = {epid})")
+                # print("Error: ", e)
+                # print(" -------------")
                 fail_num += 1
                 TASK_ENV.close_env()
 
                 if args["render_freq"]:
                     TASK_ENV.viewer.close()
                 time.sleep(1)
-
+            
+            pbar.set_postfix({"seed": epid, "failed": fail_num})
             epid += 1
 
             with open(os.path.join(args["save_path"], "seed.txt"), "w") as file:
                 for sed in seed_list:
                     file.write("%s " % sed)
+        
+        pbar.close()
 
         print(f"\nComplete simulation, failed \033[91m{fail_num}\033[0m times / {epid} tries \n")
     else:
@@ -216,8 +222,8 @@ def run(TASK_ENV: Base_Task, args, original_task_config=None):
         while exist_hdf5(st_idx):
             st_idx += 1
 
-        for episode_idx in range(st_idx, args["episode_num"]):
-            print(f"\033[34mTask name: {args['task_name']}\033[0m")
+        for episode_idx in tqdm(range(st_idx, args["episode_num"]), desc="Data Collection"):
+            # print(f"\033[34mTask name: {args['task_name']}\033[0m")
 
             TASK_ENV.setup_demo(now_ep_num=episode_idx, seed=seed_list[episode_idx], **args)
 

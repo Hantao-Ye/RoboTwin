@@ -28,7 +28,6 @@ dependencies = [
     "openai>=2.14.0",
     "huggingface_hub>=0.25.0",
     "h5py>=3.12.1",
-    "azure>=4.0.0",
     "azure-ai-inference>=1.0.0b9",
     "pyglet<2",
     "wandb>=0.18.0",

@@ -127,3 +127,5 @@ envs/curobo/*
 # Misc
 /*.json*
 /*.txt
+
+*.sif

@@ -23,17 +23,23 @@ fi
 # Extract lines starting with "- ", remove the prefix and the ".py" extension
 TASKS=$(grep "^- " "$TASKS_FILE" | sed 's/- //; s/.py//')
 
+# Count total tasks
+TOTAL_TASKS=$(echo "$TASKS" | wc -w)
+CURRENT_TASK=1
+
 echo "Starting data generation for single-arm tasks..."
+echo "Total tasks to process: $TOTAL_TASKS"
 echo "Configuration: $CONFIG"
 echo "GPU ID: $GPU_ID"
 echo "----------------------------------------"
 
 for task in $TASKS; do
-    echo "Processing task: $task"
+    echo "[${CURRENT_TASK}/${TOTAL_TASKS}] Processing task: $task"
     # Call collect_data.sh located in the same directory as this script
     "$SCRIPT_DIR/collect_data.sh" "$task" "$CONFIG" "$GPU_ID" "$EPISODE_NUM"
     echo "Finished task: $task"
     echo "----------------------------------------"
+    ((CURRENT_TASK++))
 done
 
 echo "All tasks completed."
