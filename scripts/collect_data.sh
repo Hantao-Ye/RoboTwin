@@ -19,12 +19,8 @@ fi
 # Set GPU
 export CUDA_VISIBLE_DEVICES=${GPU_ID}
 
-# Determine execution command (use uv if available, else python)
-if command -v uv >/dev/null 2>&1; then
-    CMD="uv run python"
-else
-    CMD="python"
-fi
+# Determine execution command (use python)
+CMD="python"
 
 # Construct command arguments
 PY_ARGS="src/robotwin/script/collect_data.py \"$TASK_NAME\" \"$TASK_CONFIG\""

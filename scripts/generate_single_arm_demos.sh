@@ -6,6 +6,11 @@ trap "echo 'Script interrupted by user'; exit 1" INT
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+# Source env.sh automatically if it exists
+if [ -f "$SCRIPT_DIR/../env.sh" ]; then
+    source "$SCRIPT_DIR/../env.sh"
+fi
+
 CONFIG="single_arm_data_gen"
 GPU_ID=0
 EPISODE_NUM=${1} # Optional argument for number of episodes
