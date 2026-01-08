@@ -129,3 +129,4 @@ envs/curobo/*
 /*.txt
 
 *.sif
+env.sh
