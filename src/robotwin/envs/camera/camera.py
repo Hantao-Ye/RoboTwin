@@ -26,8 +26,9 @@ try:
 
         return sampled_points, indices
 
-except:
-    print("missing pytorch3d")
+except Exception as e:
+    print(f"missing pytorch3d: {e}")
+
 
     def fps(points, num_points=1024, use_cuda=True):
         print("fps error: missing pytorch3d")
