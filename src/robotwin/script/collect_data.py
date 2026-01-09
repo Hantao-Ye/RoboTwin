@@ -36,7 +36,7 @@ def get_embodiment_config(robot_file):
     return embodiment_args
 
 
-def main(task_name=None, task_config=None, episode_num=None):
+def main(task_name=None, task_config=None, episode_num=None, start_seed=0):
 
     task = class_decorator(task_name)
     
@@ -118,11 +118,12 @@ def main(task_name=None, task_config=None, episode_num=None):
     args["embodiment_name"] = embodiment_name
     args['task_config'] = task_config_name
     args["save_path"] = os.path.join(args["save_path"], str(args["task_name"]), args["task_config"])
+    args["start_seed"] = start_seed
     run(task, args, original_task_config=task_config)
 
 
 def run(TASK_ENV: Base_Task, args, original_task_config=None):
-    epid, suc_num, fail_num, seed_list = 0, 0, 0, []
+    epid, suc_num, fail_num, seed_list = args.get("start_seed", 0), 0, 0, []
 
     print(f"Task Name: \033[34m{args['task_name']}\033[0m")
 
@@ -139,7 +140,7 @@ def run(TASK_ENV: Base_Task, args, original_task_config=None):
                 if len(seed_list) != 0:
                     seed_list = [int(i) for i in seed_list]
                     suc_num = len(seed_list)
-                    epid = max(seed_list) + 1
+                    epid = max(epid, max(seed_list) + 1)
             print(f"Exist seed file, Start from: {epid} / {suc_num}")
 
         pbar = tqdm(total=args["episode_num"], initial=suc_num, desc="Seed Collection")
@@ -273,9 +274,11 @@ if __name__ == "__main__":
     parser.add_argument("task_name", type=str)
     parser.add_argument("task_config", type=str)
     parser.add_argument("--episode_num", type=int, default=None, help="Override number of episodes to generate")
+    parser.add_argument("--start_seed", type=int, default=0, help="Starting seed for data collection")
     parser = parser.parse_args()
     task_name = parser.task_name
     task_config = parser.task_config
     episode_num = parser.episode_num
+    start_seed = parser.start_seed
 
-    main(task_name=task_name, task_config=task_config, episode_num=episode_num)
+    main(task_name=task_name, task_config=task_config, episode_num=episode_num, start_seed=start_seed)

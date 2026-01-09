@@ -14,6 +14,7 @@ fi
 CONFIG="single_arm_data_gen"
 GPU_ID=0
 EPISODE_NUM=${1} # Optional argument for number of episodes
+START_SEED=${2} # Optional argument for start seed
 
 # Path to the tasks file (relative to the script location)
 TASKS_FILE="$SCRIPT_DIR/../docs/SINGLE_ARM_TASKS.md"
@@ -41,7 +42,7 @@ echo "----------------------------------------"
 for task in $TASKS; do
     echo "[${CURRENT_TASK}/${TOTAL_TASKS}] Processing task: $task"
     # Call collect_data.sh located in the same directory as this script
-    "$SCRIPT_DIR/collect_data.sh" "$task" "$CONFIG" "$GPU_ID" "$EPISODE_NUM"
+    "$SCRIPT_DIR/collect_data.sh" "$task" "$CONFIG" "$GPU_ID" "$EPISODE_NUM" "$START_SEED"
     echo "Finished task: $task"
     echo "----------------------------------------"
     ((CURRENT_TASK++))
