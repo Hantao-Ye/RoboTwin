@@ -17,25 +17,20 @@ From: nvidia/cuda:12.6.0-devel-ubuntu24.04
         libxrender1 \
         libxext6 \
         libxi6 \
+        libglvnd0 \
+        libglx0 \
+        libegl1 \
+        libx11-6 \
         git \
         wget \
         curl \
         unzip \
-        ffmpeg
+        ffmpeg \
+        build-essential \
+        ninja-build
 
-    # Install Python 3 (Ubuntu 24.04 comes with Python 3.12)
-    apt-get update && apt-get install -y \
-        python3 \
-        python3-dev \
-        python3-venv \
-        python3-pip \
-        python3-setuptools
-
-    # Set python3 as default python
-    update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-
-    # Allow system-wide package installation (PEP 668)
-    rm -f /usr/lib/python3.*/EXTERNALLY-MANAGED
+    # Ensure EGL vendor directory exists for sapien/vulkan tricks
+    mkdir -p /usr/share/glvnd/egl_vendor.d
 
     # Clean up apt cache
     rm -rf /var/lib/apt/lists/*
@@ -52,62 +47,102 @@ From: nvidia/cuda:12.6.0-devel-ubuntu24.04
     pyproject.toml /app/
     README.md /app/
     LICENSE /app/
-    src /app/
+    src /app/src
     scripts /app/scripts
     docs /app/docs
 
 %post
-    # Install python dependencies
+    # Setup project
     cd /app
     export PATH="/root/.local/bin:$PATH"
-    # Use --no-build-isolation as requested
-    # Install torch first as it is a build dependency for pytorch3d
-    # Install Cython as it is a build dependency for toppra (via mplib)
-    # Install hatchling as it is the build backend for robotwin
-    # Set TORCH_CUDA_ARCH_LIST to avoid build errors when torch can't detect the GPU during build
-    export TORCH_CUDA_ARCH_LIST="8.0 8.6 8.9 9.0"
-    uv pip install --system --no-build-isolation torch torchvision Cython hatchling
-    uv pip install --system --no-build-isolation .
+
+    # Create virtual environment with Python 3.11 (Matching distrobox-setup.sh)
+    # Ubuntu 24.04 defaults to 3.12, so we use uv to manage the python version.
+    echo "Creating Python 3.11 environment..."
+    uv venv .venv --python 3.11
+    . .venv/bin/activate
+
+    # Set build variables
+    export TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 8.7 8.9 9.0"
+    export FORCE_CUDA=1
+    
+    # Install project dependencies
+    # (pytorch3d and curobo are intentionally excluded from pyproject.toml)
+    echo "Installing standard dependencies..."
+    uv pip install .
+
+    # --- Manual Build Step for ABI-Sensitive Packages ---
+    # Matches distrobox-setup.sh logic explicitly
+    
+    export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
+    export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
+    
+    echo "Installing pytorch3d with ABI=0 from main branch..."
+    uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/facebookresearch/pytorch3d.git"
+
+    echo "Installing nvidia-curobo with ABI=0..."
+    uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/NVlabs/curobo.git"
     
     # Create data directory
     mkdir -p /app/data
 
-    # Download assets during build time so they are baked into the image
-    # This avoids runtime download issues on read-only HPC systems
+    # Download assets during build time
     export PYTHONPATH=/app/src
     export ROBOTWIN_DOWNLOAD_TEXTURES=false
     echo "Downloading assets during build..."
-    python3 -c "from robotwin.assets._download import download_assets; download_assets()"
+    python -c "from robotwin.assets._download import download_assets; download_assets()"
+    
+    # Configure ur5-wsg-bimanual-static (copied from distrobox setup)
+    EMBODIMENT_DIR="src/robotwin/assets/embodiments"
+    if [ ! -d "$EMBODIMENT_DIR/ur5-wsg-bimanual-static" ]; then
+        echo "Creating ur5-wsg-bimanual-static configuration..."
+        cp -r "$EMBODIMENT_DIR/ur5-wsg" "$EMBODIMENT_DIR/ur5-wsg-bimanual-static"
+        
+        CONFIG_FILE="$EMBODIMENT_DIR/ur5-wsg-bimanual-static/config.yml"
+        sed -i '/static_camera_list:/,$d' "$CONFIG_FILE"
+        
+        cat >> "$CONFIG_FILE" <<EOF
+static_camera_list: 
+- name: cam_left
+  type: D415
+  position:
+  - -0.5
+  - 0
+  - 1.2
+  look_at:
+  - 0
+  - 0
+  - 0.74
+- name: cam_right
+  type: D415
+  position:
+  - 0.5
+  - 0
+  - 1.2
+  look_at:
+  - 0
+  - 0
+  - 0.74
+EOF
+    fi
 
 %environment
-    export PYTHONPATH=/app/src
+    export VIRTUAL_ENV="/app/.venv"
+    export PATH="/app/.venv/bin:$PATH"
+    export PYTHONPATH="/app/src:$PYTHONPATH"
     export ROBOTWIN_DOWNLOAD_TEXTURES=false
-    # Set default assets path to a writable location if not overridden
-    # In Singularity, /app is read-only, so users MUST bind mount or set this var
-    # We default to the internal path, but it will fail if not writable.
 
 %runscript
     #!/bin/bash
-    # This script runs when the container is executed
     
-    # Check if we are in a read-only environment and ASSETS_PATH is not set/writable
-    # We rely on the python script to handle the download logic, but we need to ensure
-    # it writes to a valid location.
-    
-    echo "Singularity container started."
-    
-    if [ -z "$ROBOTWIN_ASSETS_PATH" ]; then
-        echo "WARNING: ROBOTWIN_ASSETS_PATH is not set."
-        echo "If the container is read-only, asset download will fail."
-        echo "Please run with: --bind /path/to/assets:/app/src/robotwin/assets"
-        echo "OR set env var: --env ROBOTWIN_ASSETS_PATH=/path/to/writable/assets"
+    # Ensure environment is active
+    if [ -f "/app/.venv/bin/activate" ]; then
+        source /app/.venv/bin/activate
     fi
-
-    echo "Checking and downloading assets..."
-    python -c "from robotwin.assets._download import download_assets; download_assets()"
     
     # Execute the command passed to the container
     exec "$@"
+
 
 %help
     This is the Singularity container for RoboTwin.
