@@ -148,8 +148,14 @@ EOF
     This is the Singularity container for RoboTwin.
     
     Usage:
-        singularity run --nv --bind ./data:/app/data robotwin.sif ./scripts/generate_single_arm_demos.sh
+        # Running single-arm task data generation
+        # Usage: ./scripts/generate_single_arm_demos.sh [episode_num] [start_seed]
+        singularity run --nv --bind ./data:/app/data robotwin.sif ./scripts/generate_single_arm_demos.sh 10 0
         
+        # Collecting data for a specific task manually
+        # Usage: ./scripts/collect_data.sh <task_name> <task_config> <gpu_id> [episode_num] [start_seed]
+        singularity run --nv --bind ./data:/app/data robotwin.sif ./scripts/collect_data.sh adjust_bottle single_arm_data_gen 0 10 0
+
     Assets:
         The container needs a writable location for assets.
         Option 1 (Bind mount internal path):

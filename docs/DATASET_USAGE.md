@@ -1,6 +1,48 @@
 # Dataset Usage Guide
 
-This guide explains how to configure the data collection process to include RGB, Depth, and Proprioception data, and how to read the collected HDF5 files for training your policy.
+This guide explains how to configure the environment, run data collection, and use the collected HDF5 files for training your policy.
+
+## 0. Installation
+
+First, clone the repository and retrieve the execution environment.
+
+1. **Clone the Repository**
+
+    ```bash
+    git clone https://github.com/Hantao-Ye/RoboTwin.git
+    cd RoboTwin
+    ```
+
+2. **Download the Singularity Image**
+    Download the pre-built `robotwin.sif` image from the project's Google Drive (Confidential). Place it in the root directory of the repository (`RoboTwin/`).
+
+3. **Run Data Collection**
+    Use the Singularity container to run the data collection scripts. The container handles all dependencies.
+
+    **Option A: Generate Single-Arm Demos (Batch)**
+    To generate data for all single-arm tasks defined in `docs/SINGLE_ARM_TASKS.md`:
+
+    ```bash
+    # Usage: singularity run ... ./scripts/generate_single_arm_demos.sh [num_episodes] [start_seed]
+    
+    # Example: Generate 10 episodes starting from seed 0
+    singularity run --nv --bind ./data:/app/data robotwin.sif ./scripts/generate_single_arm_demos.sh 10 0
+    
+    # Example: Generate 100 episodes starting from seed 5000 (For multi-machine collection)
+    singularity run --nv --bind ./data:/app/data robotwin.sif ./scripts/generate_single_arm_demos.sh 100 5000
+    ```
+
+    **Option B: Generate Data for a Specific Task**
+    To generate data for a single specific task (e.g., `adjust_bottle`):
+
+    ```bash
+    # Usage: singularity run ... ./scripts/collect_data.sh <task_name> <config_name> <gpu_id> [num_episodes] [start_seed]
+    
+    # Example: Generate 50 episodes for 'adjust_bottle' starting from seed 100 on GPU 0
+    singularity run --nv --bind ./data:/app/data robotwin.sif ./scripts/collect_data.sh adjust_bottle single_arm_data_gen 0 50 100
+    ```
+
+    *Note: The `--bind ./data:/app/data` flag ensures the generated data persists on your host machine in the `data/` folder.*
 
 ## 1. Configuration
 

@@ -2,7 +2,6 @@
 
 The following tasks have been identified as suitable for execution with a single robot arm. These tasks typically involve manipulating objects that are either static or do not require a second arm for support or coordination.
 
-- beat_block_hammer.py
 - click_alarmclock.py
 - click_bell.py
 - move_can_pot.py
