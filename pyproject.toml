@@ -13,7 +13,7 @@ authors = [
     { name = "RoboTwin Team" }
 ]
 dependencies = [
-    "torch>=2.4.1",
+    "torch>=2.9.1",
     "torchvision>=0.19.1",
     "transforms3d>=0.4.2",
     "sapien>=3.0.0b1",

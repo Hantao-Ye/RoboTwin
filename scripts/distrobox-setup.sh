@@ -50,13 +50,13 @@ echo "Installing Python dependencies..."
 cd "$(dirname "$0")/.."
 
 # Set TORCH_CUDA_ARCH_LIST for your GPU (adjust as needed)
-# Common values: 8.0 (A100), 8.6 (RTX 30 series), 8.9 (RTX 40 series), 9.0 (H100)
-export TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 8.7 8.9 9.0"
+# Common values: 8.0 (A100), 8.6 (RTX 30 series), 8.9 (RTX 40 series), 9.0 (H100), 10.0 (RTX 50 series / Blackwell)
+export TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 8.7 8.9 9.0 10.0"
 
 # Fix C++ ABI compatibility (PyTorch wheels use old ABI=0, system GCC uses new ABI=1)
-# We must Force ABI=0 to match the installed torch version (2.4.1+cu121)
-export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
-export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
+# PyTorch 2.9+ likely uses New ABI (1)
+export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
+export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
 
 # Create and activate virtual environment
 echo "Creating virtual environment (.venv)..."
@@ -74,8 +74,8 @@ source .venv/bin/activate
 echo "Reinstalling pytorch3d to ensure ABI compatibility..."
 uv pip uninstall pytorch3d || true
 export FORCE_CUDA=1
-export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
-export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
+export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
+export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
 uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/facebookresearch/pytorch3d.git@stable"
 
 # Reinstall curobo to ensure ABI compatibility and CUDA compilation
