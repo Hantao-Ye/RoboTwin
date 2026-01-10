@@ -56,6 +56,7 @@ class open_laptop(Base_Task):
             "{A}": f"{self.model_name}/base{self.model_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.laptop.actor.per_scene_id]
         return self.info
 
     def check_success(self, target=0.4):

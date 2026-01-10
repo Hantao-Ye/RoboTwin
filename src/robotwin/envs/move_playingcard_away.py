@@ -56,6 +56,7 @@ class move_playingcard_away(Base_Task):
             "{A}": f"081_playingcards/base{self.playingcards_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.playingcards.actor.per_scene_id]
         return self.info
 
     def check_success(self):

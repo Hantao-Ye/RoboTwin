@@ -63,6 +63,9 @@ class click_bell(Base_Task):
     
         # Record which bell and arm were used in the info dictionary
         self.info["info"] = {"{A}": f"050_bell/base{self.bell_id}", "{a}": str(arm_tag)}
+        
+        self.info["target_object_ids"] = [self.bell.actor.per_scene_id]
+
         return self.info
 
 

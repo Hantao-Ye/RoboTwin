@@ -107,6 +107,7 @@ class move_stapler_pad(Base_Task):
             "{B}": self.color_name,
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.stapler.actor.per_scene_id, self.pad.actor.per_scene_id]
         return self.info
 
     def check_success(self):

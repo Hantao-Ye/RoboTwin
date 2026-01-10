@@ -129,6 +129,7 @@ class place_object_stand(Base_Task):
             "{B}": f"074_displaystand/base{self.displaystand_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.object.actor.per_scene_id, self.displaystand.actor.per_scene_id]
         return self.info
 
     def check_success(self):

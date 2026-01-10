@@ -40,6 +40,7 @@ class press_stapler(Base_Task):
             self.grasp_actor(self.stapler, arm_tag=arm_tag, pre_grasp_dis=0.02, grasp_dis=0.02, contact_point_id=2))
 
         self.info["info"] = {"{A}": f"048_stapler/base{self.stapler_id}", "{a}": str(arm_tag)}
+        self.info["target_object_ids"] = [self.stapler.actor.per_scene_id]
         return self.info
 
     def check_success(self):

@@ -112,6 +112,7 @@ class place_mouse_pad(Base_Task):
             "{B}": f"{self.color_name}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.mouse.actor.per_scene_id, self.target.actor.per_scene_id]
         return self.info
 
     def check_success(self):

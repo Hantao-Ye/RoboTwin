@@ -12,6 +12,9 @@ sudo apt-get update && sudo apt-get install -y \
     software-properties-common \
     unzip \
     ffmpeg \
+    libavcodec-extra \
+    libx264-dev \
+    x264 \
     libgl1 \
     libglib2.0-0 \
     libxrender1 \

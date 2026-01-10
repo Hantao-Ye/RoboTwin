@@ -126,6 +126,7 @@ class place_object_scale(Base_Task):
             "{B}": f"{self.selected_modelname}/base{self.selected_model_id}",
             "{a}": str(self.arm_tag),
         }
+        self.info["target_object_ids"] = [self.object.actor.per_scene_id, self.scale.actor.per_scene_id]
         return self.info
 
     def check_success(self):

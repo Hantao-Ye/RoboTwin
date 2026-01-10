@@ -85,6 +85,7 @@ class place_empty_cup(Base_Task):
         self.move(self.move_by_displacement(arm_tag, z=0.05, move_axis="arm"))
 
         self.info["info"] = {"{A}": "021_cup/base0", "{B}": "019_coaster/base0"}
+        self.info["target_object_ids"] = [self.cup.actor.per_scene_id, self.coaster.actor.per_scene_id]
         return self.info
 
     def check_success(self):

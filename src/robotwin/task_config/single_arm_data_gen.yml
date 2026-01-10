@@ -1,7 +1,7 @@
 render_freq: 0
 episode_num: 10
 use_seed: false
-save_freq: 15
+save_freq: 7
 embodiment: [ur5-wsg-bimanual-static, ur5-wsg-bimanual-static, 0.8]
 dynamic_single_arm_visibility: true
 language_num: 100

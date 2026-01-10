@@ -141,6 +141,7 @@ class place_a2b_left(Base_Task):
             "{B}": f"{self.selected_modelname_B}/base{self.selected_model_id_B}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.object.actor.per_scene_id, self.target_object.actor.per_scene_id]
         return self.info
 
     def check_success(self):

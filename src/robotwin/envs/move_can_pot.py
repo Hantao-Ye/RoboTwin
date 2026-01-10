@@ -90,6 +90,7 @@ class move_can_pot(Base_Task):
             "{B}": f"105_sauce-can/base{self.can_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.can.actor.per_scene_id, self.pot.actor.per_scene_id]
         return self.info
 
     def check_success(self):

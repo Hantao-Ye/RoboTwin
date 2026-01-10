@@ -35,6 +35,7 @@ class turn_switch(Base_Task):
         self.move(self.grasp_actor(self.switch, arm_tag=arm_tag, pre_grasp_dis=0.04))
 
         self.info["info"] = {"{A}": f"056_switch/base{self.model_id}", "{a}": str(arm_tag)}
+        self.info["target_object_ids"] = [self.switch.actor.per_scene_id]
         return self.info
 
     def check_success(self):

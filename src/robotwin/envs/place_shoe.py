@@ -86,6 +86,7 @@ class place_shoe(Base_Task):
         self.move(self.open_gripper(arm_tag=arm_tag))
 
         self.info["info"] = {"{A}": f"041_shoe/base{self.shoe_id}", "{a}": str(arm_tag)}
+        self.info["target_object_ids"] = [self.shoe.actor.per_scene_id, self.target_block.actor.per_scene_id]
         return self.info
 
     def check_success(self):

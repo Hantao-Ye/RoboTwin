@@ -32,7 +32,7 @@ class place_bread_basket(Base_Task):
         self.bread: list[Actor] = []
         self.bread_id = []
 
-        for i in range(2):
+        for i in range(1):
             rand_pos = rand_pose(
                 xlim=[-0.27, 0.27],
                 ylim=[-0.2, 0.05],
@@ -183,6 +183,9 @@ class place_bread_basket(Base_Task):
         }
         if len(self.bread) == 2:
             self.info["info"]["{C}"] = f"075_bread/base{self.bread_id[1]}"
+            self.info["target_object_ids"] = [b.actor.per_scene_id for b in self.bread] + [self.breadbasket.actor.per_scene_id]
+        else:
+            self.info["target_object_ids"] = [self.bread[0].actor.per_scene_id, self.breadbasket.actor.per_scene_id]
 
         return self.info
 

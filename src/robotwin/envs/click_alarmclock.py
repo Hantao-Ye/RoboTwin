@@ -72,6 +72,7 @@ class click_alarmclock(Base_Task):
             "{A}": f"046_alarm-clock/base{self.alarmclock_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.alarm.actor.per_scene_id]
         return self.info
 
 

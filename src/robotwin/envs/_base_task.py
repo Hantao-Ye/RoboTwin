@@ -570,6 +570,10 @@ class Base_Task(gym.Env):
         elif self.active_arm_tag is not None:
             metadata["arm_tag"] = self.active_arm_tag
 
+        # Forward target object IDs if present
+        if "target_object_ids" in self.info:
+            metadata["target_object_ids"] = self.info["target_object_ids"]
+
         process_folder_to_hdf5_video(cache_path, target_file_path, target_video_path, metadata=metadata)
 
     def remove_data_cache(self):

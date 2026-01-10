@@ -65,6 +65,7 @@ class rotate_qrcode(Base_Task):
             "{A}": f"070_paymentsign/base{self.model_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.qrcode.actor.per_scene_id]
         return self.info
 
     def check_success(self):

@@ -94,6 +94,7 @@ class place_phone_stand(Base_Task):
             "{B}": f"078_phonestand/base{self.stand_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.phone.actor.per_scene_id, self.stand.actor.per_scene_id]
         return self.info
 
     def check_success(self):

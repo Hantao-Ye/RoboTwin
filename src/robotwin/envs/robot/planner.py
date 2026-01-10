@@ -243,7 +243,7 @@ try:
             return res_result
 
         def plan_grippers(self, now_val, target_val):
-            num_step = 200
+            num_step = 30
             dis_val = target_val - now_val
             step = dis_val / num_step
             res = {}
@@ -421,7 +421,7 @@ class MplibPlanner:
         return result
 
     def plan_grippers(self, now_val, target_val):
-        num_step = 200  # TODO
+        num_step = 30  # TODO
         dis_val = target_val - now_val
         per_step = dis_val / num_step
         res = {}

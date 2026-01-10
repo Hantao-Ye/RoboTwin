@@ -377,13 +377,14 @@ class Camera:
         def _get_segmentation(camera, level="mesh"):
             # visual_id is the unique id of each visual shape
             seg_labels = camera.get_picture("Segmentation")  # [H, W, 4]
-            colormap = sorted(set(ImageColor.colormap.values()))
-            color_palette = np.array([ImageColor.getrgb(color) for color in colormap], dtype=np.uint8)
+            # colormap = sorted(set(ImageColor.colormap.values()))
+            # color_palette = np.array([ImageColor.getrgb(color) for color in colormap], dtype=np.uint8)
             if level == "mesh":
                 label0_image = seg_labels[..., 0].astype(np.uint8)  # mesh-level
             elif level == "actor":
                 label0_image = seg_labels[..., 1].astype(np.uint8)  # actor-level
-            return color_palette[label0_image]
+            # return color_palette[label0_image]
+            return label0_image
 
         res = {
             # 'left_camera':{},

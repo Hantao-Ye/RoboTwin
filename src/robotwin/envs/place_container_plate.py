@@ -88,6 +88,7 @@ class place_container_plate(Base_Task):
             "{B}": f"{self.actor_name}/base{self.container_id}",
             "{a}": str(arm_tag),
         }
+        self.info["target_object_ids"] = [self.container.actor.per_scene_id, self.plate.actor.per_scene_id]
         return self.info
 
     def check_success(self):

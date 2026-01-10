@@ -90,6 +90,10 @@ class move_pillbottle_pad(Base_Task):
             "{A}": f"080_pillbottle/base{self.pillbottle_id}",
             "{a}": str(arm_tag),
         }
+        
+        # Save target object ID for automatic mask extraction
+        # The ID corresponds to the actor ID in the segmentation mask
+        self.info["target_object_ids"] = [self.pillbottle.actor.per_scene_id, self.pad.actor.per_scene_id]
 
         return self.info
 
