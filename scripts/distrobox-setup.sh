@@ -50,13 +50,13 @@ echo "Installing Python dependencies..."
 cd "$(dirname "$0")/.."
 
 # Set TORCH_CUDA_ARCH_LIST for your GPU (adjust as needed)
-# Common values: 8.0 (A100), 8.6 (RTX 30 series), 8.9 (RTX 40 series), 9.0 (H100), 10.0 (RTX 50 series / Blackwell)
-export TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 8.7 8.9 9.0 10.0"
-
-# Fix C++ ABI compatibility (PyTorch wheels use old ABI=0, system GCC uses new ABI=1)
-# PyTorch 2.9+ likely uses New ABI (1)
-export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
-export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
+if [ -z "$TORCH_CUDA_ARCH_LIST" ] && command -v nvidia-smi >/dev/null 2>&1; then
+    # Query compute capability (e.g., "8.9"), take the first GPU found
+    DETECTED_ARCH=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader,nounits | head -n 1 | tr -d ' ')
+    if [ -n "$DETECTED_ARCH" ]; then
+        export TORCH_CUDA_ARCH_LIST="$DETECTED_ARCH"
+    fi
+fi
 
 # Create and activate virtual environment
 echo "Creating virtual environment (.venv)..."
@@ -74,8 +74,16 @@ source .venv/bin/activate
 echo "Reinstalling pytorch3d to ensure ABI compatibility..."
 uv pip uninstall pytorch3d || true
 export FORCE_CUDA=1
-export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
-export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
+
+echo "Checking PyTorch ABI compatibility..."
+# Ask the installed PyTorch which ABI it was built with (True=1, False=0)
+TORCH_ABI=$(python3 -c "import torch; print(int(torch._C._GLIBCXX_USE_CXX11_ABI))")
+echo "Detected PyTorch ABI: $TORCH_ABI"
+
+# Export the correctly detected ABI flags for subsequent compiles
+export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=$TORCH_ABI"
+export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=$TORCH_ABI"
+
 uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/facebookresearch/pytorch3d.git@stable"
 
 # Reinstall curobo to ensure ABI compatibility and CUDA compilation
@@ -132,11 +140,15 @@ fi
 
 # Generate a project-specific environment script instead of modifying global shell config
 echo "Creating env.sh for easy activation..."
-cat > env.sh <<EOF
+cat > env.sh <<'EOF'
 #!/bin/bash
-export PYTHONPATH="$(pwd)/src:\$PYTHONPATH"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+export PYTHONPATH="$PROJECT_ROOT/src:$PYTHONPATH"
 export ROBOTWIN_DOWNLOAD_TEXTURES=false
-source "$(pwd)/.venv/bin/activate"
+
+# Source the venv using the safe variable
+source "$PROJECT_ROOT/.venv/bin/activate"
 EOF
 
 echo "Setup complete!"
