@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: nvidia/cuda:12.6.0-devel-ubuntu24.04
+From: nvidia/cuda:12.8.0-devel-ubuntu24.04
 
 %labels
     Author RoboTwin Team
@@ -10,24 +10,33 @@ From: nvidia/cuda:12.6.0-devel-ubuntu24.04
     export DEBIAN_FRONTEND=noninteractive
 
     # Install system dependencies
+    # Matching distrobox-setup.sh + container specific libs
     apt-get update && apt-get install -y \
         software-properties-common \
+        unzip \
+        ffmpeg \
+        libavcodec-extra \
+        libx264-dev \
+        x264 \
         libgl1 \
         libglib2.0-0 \
         libxrender1 \
         libxext6 \
         libxi6 \
-        libglvnd0 \
-        libglx0 \
-        libegl1 \
-        libx11-6 \
+        python3 \
+        python3-venv \
+        python3-dev \
+        python3-pip \
+        python3-setuptools \
+        build-essential \
+        ninja-build \
         git \
         wget \
         curl \
-        unzip \
-        ffmpeg \
-        build-essential \
-        ninja-build
+        libglvnd0 \
+        libglx0 \
+        libegl1 \
+        libx11-6
 
     # Ensure EGL vendor directory exists for sapien/vulkan tricks
     mkdir -p /usr/share/glvnd/egl_vendor.d
@@ -45,6 +54,7 @@ From: nvidia/cuda:12.6.0-devel-ubuntu24.04
 
 %files
     pyproject.toml /app/
+    uv.lock /app/
     README.md /app/
     LICENSE /app/
     src /app/src
@@ -56,31 +66,37 @@ From: nvidia/cuda:12.6.0-devel-ubuntu24.04
     cd /app
     export PATH="/root/.local/bin:$PATH"
 
-    # Create virtual environment with Python 3.11 (Matching distrobox-setup.sh)
-    # Ubuntu 24.04 defaults to 3.12, so we use uv to manage the python version.
-    echo "Creating Python 3.11 environment..."
-    uv venv .venv --python 3.11
-    . .venv/bin/activate
-
+    # Use uv sync to setup the environment (Matching distrobox-setup.sh)
+    echo "Syncing project with uv..."
     # Set build variables
-    export TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 8.7 8.9 9.0"
+    # Keeping the broad list for container portability, unlike distrobox which targets local hardware
+    export TORCH_CUDA_ARCH_LIST="7.0 7.5 8.0 8.6 8.7 8.9 9.0 10.0"
     export FORCE_CUDA=1
-    
-    # Install project dependencies
-    # (pytorch3d and curobo are intentionally excluded from pyproject.toml)
-    echo "Installing standard dependencies..."
-    uv pip install .
+
+    # Using uv sync with Python 3.11
+    uv sync --python 3.11
+    . .venv/bin/activate
 
     # --- Manual Build Step for ABI-Sensitive Packages ---
     # Matches distrobox-setup.sh logic explicitly
-    
-    export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
-    export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
-    
-    echo "Installing pytorch3d with ABI=0 from main branch..."
-    uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/facebookresearch/pytorch3d.git"
 
-    echo "Installing nvidia-curobo with ABI=0..."
+    echo "Reinstalling pytorch3d to ensure ABI compatibility..."
+    uv pip uninstall pytorch3d || true
+    
+    echo "Checking PyTorch ABI compatibility..."
+    # Ask the installed PyTorch which ABI it was built with (True=1, False=0)
+    TORCH_ABI=$(python3 -c "import torch; print(int(torch._C._GLIBCXX_USE_CXX11_ABI))")
+    echo "Detected PyTorch ABI: $TORCH_ABI"
+    
+    export CFLAGS="-D_GLIBCXX_USE_CXX11_ABI=$TORCH_ABI"
+    export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=$TORCH_ABI"
+    
+    echo "Installing pytorch3d with ABI=$TORCH_ABI..."
+    # Using @stable tag as in distrobox-setup.sh
+    uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/facebookresearch/pytorch3d.git@stable"
+
+    echo "Reinstalling nvidia-curobo to ensure ABI compatibility..."
+    uv pip uninstall nvidia-curobo || true
     uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/NVlabs/curobo.git"
     
     # Create data directory
@@ -99,6 +115,7 @@ From: nvidia/cuda:12.6.0-devel-ubuntu24.04
         cp -r "$EMBODIMENT_DIR/ur5-wsg" "$EMBODIMENT_DIR/ur5-wsg-bimanual-static"
         
         CONFIG_FILE="$EMBODIMENT_DIR/ur5-wsg-bimanual-static/config.yml"
+        # Removing exisiting config
         sed -i '/static_camera_list:/,$d' "$CONFIG_FILE"
         
         cat >> "$CONFIG_FILE" <<EOF
@@ -106,9 +123,9 @@ static_camera_list:
 - name: cam_left
   type: D415
   position:
-  - -0.5
+  - -0.6
   - 0
-  - 1.2
+  - 1.3
   look_at:
   - 0
   - 0
@@ -116,9 +133,9 @@ static_camera_list:
 - name: cam_right
   type: D415
   position:
-  - 0.5
+  - 0.6
   - 0
-  - 1.2
+  - 1.3
   look_at:
   - 0
   - 0
