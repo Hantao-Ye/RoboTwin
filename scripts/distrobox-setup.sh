@@ -27,7 +27,10 @@ sudo apt-get update && sudo apt-get install -y \
     python3-setuptools \
     build-essential \
     ninja-build \
-    git
+    git \
+    libvulkan1 \
+    mesa-vulkan-drivers \
+    vulkan-tools
 
 # Ensure uv is available (should be installed by box-init)
 if ! command -v uv &> /dev/null; then
