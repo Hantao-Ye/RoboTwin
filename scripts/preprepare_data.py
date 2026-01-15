@@ -29,13 +29,17 @@ def pose7d_to_matrix(pose_7d):
 def generate_masked_point_cloud(
     depth_frame,
     rgb_mask_frame,
-    target_id,
+    target_ids,
     K,
     rgb_frame=None,
     T_cam_to_world=None,
     depth_scale=1.0,
 ):
-    mask_boolean = rgb_mask_frame == target_id
+    # Ensure target_ids is a list
+    if not isinstance(target_ids, (list, tuple, np.ndarray)):
+        target_ids = [target_ids]
+
+    mask_boolean = np.isin(rgb_mask_frame, target_ids)
     if np.sum(mask_boolean) == 0:
         return None
 
@@ -79,19 +83,20 @@ def analyze_mask_colors(mask_frame, frame_idx=0, cam_name=""):
     print("-" * 40 + "\n")
 
 
-def read_and_process_hdf5(file_path, TARGET_OBJECT_ID=None):
+def read_and_process_hdf5(file_path, target_ids=None):
     if not os.path.exists(file_path):
         print(f"Error: File not found: {file_path}")
         return None, None, None, None, None, {}
 
     with h5py.File(file_path, "r") as f:
         # Auto-detect target object ID
-        if TARGET_OBJECT_ID is None and "target_object_ids" in f.attrs:
+        if target_ids is None and "target_object_ids" in f.attrs:
             t_ids = f.attrs["target_object_ids"]
             if len(t_ids) > 0:
-                TARGET_OBJECT_ID = int(t_ids[0])
+                target_ids = t_ids.tolist() if hasattr(t_ids, "tolist") else list(t_ids)
+                target_ids = [int(x) for x in target_ids]
                 print(
-                    f"Auto-detected TARGET_OBJECT_ID from attributes: {TARGET_OBJECT_ID}"
+                    f"Auto-detected target_ids from attributes: {target_ids}"
                 )
 
         # Read images
@@ -149,8 +154,8 @@ def read_and_process_hdf5(file_path, TARGET_OBJECT_ID=None):
                 if num_frames == 0:
                     num_frames = camera_data_cache[cam_name]["depth"].shape[0]
 
-        if TARGET_OBJECT_ID is None:
-            print("TARGET_OBJECT_ID is None. Analyzing frames...")
+        if target_ids is None:
+            print("target_ids is None. Analyzing frames...")
             for cam_name in CAM_NAMES:
                 if cam_name in camera_data_cache:
                     analyze_mask_colors(
@@ -167,7 +172,7 @@ def read_and_process_hdf5(file_path, TARGET_OBJECT_ID=None):
             )
 
         print(
-            f"Generating Point Clouds for {num_frames} frames (Object ID {TARGET_OBJECT_ID})..."
+            f"Generating Point Clouds for {num_frames} frames (Object ID {target_ids})..."
         )
         all_merged_pcds = []
 
@@ -187,7 +192,7 @@ def read_and_process_hdf5(file_path, TARGET_OBJECT_ID=None):
                 pcd = generate_masked_point_cloud(
                     data["depth"][t],
                     data["mask"][t],
-                    TARGET_OBJECT_ID,
+                    target_ids,
                     data["K"][t],
                     rgb_frame=image_data[cam_name][t],
                     T_cam_to_world=T_c2w,
@@ -203,13 +208,13 @@ def read_and_process_hdf5(file_path, TARGET_OBJECT_ID=None):
                 print(f"Frame {t}: Merged {len(current_frame_pcds)} cameras.")
 
     masked_first_frames = {}
-    if TARGET_OBJECT_ID is not None:
+    if target_ids is not None:
         for cam_name in CAM_NAMES:
             if cam_name in image_data and cam_name in camera_data_cache:
                 rgb_curr = image_data[cam_name][0]
                 mask_curr = camera_data_cache[cam_name]["mask"][0]
                 # Apply mask
-                mask_boolean = mask_curr == TARGET_OBJECT_ID
+                mask_boolean = np.isin(mask_curr, target_ids)
                 masked_img = rgb_curr.copy()
                 masked_img[~mask_boolean] = 0  # Set background to black
                 masked_first_frames[cam_name] = masked_img
@@ -389,7 +394,8 @@ def main():
     save_pkl_path = os.path.join(os.path.dirname(output_dir), "processed_data.pkl")
 
     # Run processing
-    rgb, depth, poses, grippers, pcds, masked_first_frames = read_and_process_hdf5(file_path, args.target_id)
+    target_ids = [args.target_id] if args.target_id is not None else None
+    rgb, depth, poses, grippers, pcds, masked_first_frames = read_and_process_hdf5(file_path, target_ids)
 
     if rgb and len(pcds) > 0:
         if not os.path.exists(output_dir):
