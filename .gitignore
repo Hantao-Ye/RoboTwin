@@ -131,3 +131,5 @@ envs/curobo/*
 *.sif
 env.sh
 singularity_build/*
+.agent/*
+checkpoints/*
