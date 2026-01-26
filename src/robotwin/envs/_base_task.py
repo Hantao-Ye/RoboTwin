@@ -227,7 +227,7 @@ class Base_Task(gym.Env):
         sapien.render.set_camera_shader_dir("rt")
         sapien.render.set_ray_tracing_samples_per_pixel(32)
         sapien.render.set_ray_tracing_path_depth(8)
-        sapien.render.set_ray_tracing_denoiser("oidn")
+        sapien.render.set_ray_tracing_denoiser("optix")
 
         # declare sapien scene
         scene_config = sapien.SceneConfig()
@@ -926,10 +926,10 @@ class Base_Task(gym.Env):
             if actions_by_arm2 is None:
                 active_arm = actions_by_arm1[0]
                 self.active_arm_tag = str(active_arm)
-                if active_arm == "left":
-                    self.robot.set_arm_visibility("right", False)
-                else:
-                    self.robot.set_arm_visibility("left", False)
+                # if active_arm == "left":
+                self.robot.set_arm_visibility("right", False)
+                # else:
+                self.robot.set_arm_visibility("left", False)
                 self.has_set_visibility = True
 
         def get_actions(actions, arm_tag: ArmTag) -> list[Action]:

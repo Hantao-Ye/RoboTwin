@@ -28,25 +28,109 @@ class place_a2b_left(Base_Task):
                     continue
             return available_ids
 
-        object_list = [
+
+        bottle_objects = [
+            "001_bottle",
+            "028_roll-paper",
+            "025_chips-tub",
+            "029_olive-oil",
+            "031_jam-jar",
+            "038_milk-box",
+            "049_shampoo",
+            "064_msg",
+            "065_soy-sauce",
+            "066_vinegar",
+            "068_boxdrink",
+            "071_can",
+            "080_pillbottle",
+            "095_glue",
+            "101_milk-tea",
+            "105_sauce-can",
+            "108_block",
+            "109_hyfrating-oil",
+            "114_bottle",
+            "115_perfume",
+        ]
+        
+        bowl_objects = [
+            "002_bowl",
+        ]
+        
+        plate_objects = [
+            "003_plate",
+            "008_tray",
+            "019_coaster",
+            "076_breadbasket",
+            "104_board",
+            "106_skillet",
+        ]
+        
+        box_objects = [
+            "006_hamburg",
+            "023_tissue-box",
+            "055_small-speaker",
+            "073_rubikscube",
+            "098_speaker",
+            "107_soap",
+            "112_tea-box",
+            "113_coffee-box",
+            "117_whiteboard-eraser",
+        ]
+        
+        kettle_objects = [
+            "009_kettle",
+            "087_waterer",
+            "091_kettle",
+        ]
+        
+        plant_objects = [
+            "012_plant-plot",
+            "120_plant",
+            "059_pencup",
+        ]
+        
+        cup_objects = [
+            "021_cup",
+            "039_mug",
+            "067_steamer",
+        ]
+        
+        tool_objects = [
+            "018_microphone",
+            "020_hammer",
+            "024_scanner",
+            "030_drill",
+            "032_screwdriver",
+            "084_woodenmallet",
+            "053_teanet",
+        ]
+        
+        ball_objects = [
+            "035_apple",
+            "027_table-tennis",
+        ]
+        
+        other_objects = [
+            "005_french-fries",
+            "017_calculator",
+            "040_rack",
+            "041_shoe",
             "047_mouse",
             "048_stapler",
             "050_bell",
+            "054_baguette",
             "057_toycar",
-            "073_rubikscube",
+            "069_vagetable",
+            "074_displaystand",
             "075_bread",
-            "077_phone",
-            "081_playingcards",
-            "086_woodenblock",
-            "112_tea-box",
-            "113_coffee-box",
-            "107_soap",
+            "099_fan",
+            "103_fruit",
         ]
 
         try_num, try_lim = 0, 100
         while try_num <= try_lim:
             rand_pos = rand_pose(
-                xlim=[-0.22, 0.22],
+                xlim=[0.01, 0.22],
                 ylim=[-0.2, 0.0],
                 qpos=[0.5, 0.5, 0.5, 0.5],
                 rotate_rand=True,
@@ -82,7 +166,7 @@ class place_a2b_left(Base_Task):
         if try_num > try_lim:
             raise "Actor create limit!"
 
-        self.selected_modelname_A = np.random.choice(object_list)
+        self.selected_modelname_A = np.random.choice(box_objects)
 
         available_model_ids = get_available_model_ids(self.selected_modelname_A)
         if not available_model_ids:
@@ -97,9 +181,9 @@ class place_a2b_left(Base_Task):
             model_id=self.selected_model_id_A,
         )
 
-        self.selected_modelname_B = np.random.choice(object_list)
+        self.selected_modelname_B = np.random.choice(bottle_objects)
         while self.selected_modelname_B == self.selected_modelname_A:
-            self.selected_modelname_B = np.random.choice(object_list)
+            self.selected_modelname_B = np.random.choice(bottle_objects)
 
         available_model_ids = get_available_model_ids(self.selected_modelname_B)
         if not available_model_ids:

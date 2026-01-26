@@ -123,11 +123,11 @@ static_camera_list:
 - name: cam_left
   type: D415
   position:
-  - -0.6
+  - -0.3
   - 0
   - 1.3
   look_at:
-  - 0
+  - 0.2
   - 0
   - 0.74
 - name: cam_right
@@ -137,7 +137,7 @@ static_camera_list:
   - 0
   - 1.3
   look_at:
-  - 0
+  - -0.2
   - 0
   - 0.74
 EOF

@@ -2,25 +2,70 @@
 from ._base_task import Base_Task
 from .utils import *
 
+import glob
+import numpy as np
 
 class place_empty_cup(Base_Task):
 
     def setup_demo(self, **kwags):
         super()._init_task_env_(**kwags)
 
+    cup_objects = [
+        "021_cup",
+        "039_mug",
+        "067_steamer",
+    ]
+    
     def load_actors(self):
-        tag = np.random.randint(0, 2)
+        
+        def get_available_model_ids(modelname):
+            asset_path = os.path.join(ASSETS_PATH, "objects", modelname)
+            json_files = glob.glob(os.path.join(asset_path, "model_data*.json"))
+
+            available_ids = []
+            for file in json_files:
+                base = os.path.basename(file)
+                try:
+                    idx = int(base.replace("model_data", "").replace(".json", ""))
+                    available_ids.append(idx)
+                except ValueError:
+                    continue
+            return available_ids
+        
+        
+        cup_objects = [
+            "021_cup",
+            "039_mug",
+            "067_steamer",
+        ]
+        
+        plate_objects = [
+            "003_plate",
+            "008_tray",
+            "019_coaster",
+            "076_breadbasket",
+            "104_board",
+            "106_skillet",
+        ]
+        
+        self.model_name = np.random.choice(np.array(cup_objects))
+        available_model_ids = get_available_model_ids(self.model_name)
+        self.object_id = np.random.choice(available_model_ids)
+        if not available_model_ids:
+            raise ValueError(f"No available model_data.json files found for {self.model_name}")
+        
+        tag = 0
         cup_xlim = [[0.15, 0.3], [-0.3, -0.15]]
         coaster_lim = [[-0.05, 0.1], [-0.1, 0.05]]
         self.cup = rand_create_actor(
             self,
             xlim=cup_xlim[tag],
             ylim=[-0.2, 0.05],
-            modelname="021_cup",
+            modelname=self.model_name,
             rotate_rand=False,
             qpos=[0.5, 0.5, 0.5, 0.5],
             convex=True,
-            model_id=0,
+            model_id=self.object_id,
         )
         cup_pose = self.cup.get_pose().p
 
@@ -41,7 +86,7 @@ class place_empty_cup(Base_Task):
         self.coaster = create_actor(
             self,
             pose=coaster_pose,
-            modelname="019_coaster",
+            modelname="003_plate",
             convex=True,
             model_id=0,
             is_static=True
@@ -84,7 +129,7 @@ class place_empty_cup(Base_Task):
         # Lift the arm slightly (0.05m) after placing to avoid collision
         self.move(self.move_by_displacement(arm_tag, z=0.05, move_axis="arm"))
 
-        self.info["info"] = {"{A}": "021_cup/base0", "{B}": "019_coaster/base0"}
+        self.info["info"] = {"{A}": f"{self.model_name}/base{self.object_id}", "{B}": f"003_plate/base0"}
         self.info["target_object_ids"] = [self.cup.actor.per_scene_id, self.coaster.actor.per_scene_id]
         return self.info
 
