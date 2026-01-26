@@ -106,8 +106,8 @@ class Robot:
             self.right_entity = self._entity
         else:
             arms_dis = kwargs["embodiment_dis"]
-            self.left_entity_origion_pose.p += [-arms_dis / 2, 0, 0]
-            self.right_entity_origion_pose.p += [arms_dis / 2, 0, 0]
+            self.left_entity_origion_pose.p += [-arms_dis / 2, 0, 0.5]
+            self.right_entity_origion_pose.p += [arms_dis / 2, 0, 0.5]
             left_loader: sapien.URDFLoader = scene.create_urdf_loader()
             left_loader.fix_root_link = True
             right_loader: sapien.URDFLoader = scene.create_urdf_loader()
