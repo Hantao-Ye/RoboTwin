@@ -54,6 +54,9 @@ dependencies = [
     "accelerate>=0.20.0",
     "bitsandbytes>=0.40.0",
     "numpy<2.0.0",
+    "lightning>=2.6.0",
+    "torch-geometric>=2.7.0",
+    "ip",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -61,6 +64,9 @@ packages = ["src/robotwin"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.uv.sources]
+ip = { git = "https://github.com/matdmiller/instant_policy.git" }
 
 [dependency-groups]
 dev = [
