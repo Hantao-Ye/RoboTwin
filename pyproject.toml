@@ -57,6 +57,7 @@ dependencies = [
     "lightning>=2.6.0",
     "torch-geometric>=2.7.0",
     "ip",
+    "warp-lang",
 ]
 
 [tool.hatch.build.targets.wheel]

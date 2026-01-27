@@ -78,6 +78,10 @@ echo "Reinstalling pytorch3d to ensure ABI compatibility..."
 uv pip uninstall pytorch3d || true
 export FORCE_CUDA=1
 
+# Ensure numpy is <2.0.0 BEFORE compiling anything to avoid ABI mismatch
+echo "Downgrading numpy to <2.0.0 for compatibility..."
+uv pip install --no-build-isolation "numpy<2.0.0"
+
 echo "Checking PyTorch ABI compatibility..."
 # Ask the installed PyTorch which ABI it was built with (True=1, False=0)
 TORCH_ABI=$(python3 -c "import torch; print(int(torch._C._GLIBCXX_USE_CXX11_ABI))")
@@ -89,10 +93,18 @@ export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=$TORCH_ABI"
 
 uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/facebookresearch/pytorch3d.git@stable"
 
+# Manual installation of torch-geometric stack to fix ABI and version issues
+# torch-cluster needs to be built from git for torch>=2.9 compatibility
+# numpy must be kept <2.0.0 to avoid segfaults in sapien/curobo
+echo "Reinstalling torch-geometric stack with correct ABI..."
+uv pip uninstall torch-cluster torch-scatter torch-sparse || true
+uv pip install --no-build-isolation --no-cache-dir --upgrade torch-scatter torch-sparse "numpy<2.0.0"
+uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/rusty1s/pytorch_cluster.git" "numpy<2.0.0"
+
 # Reinstall curobo to ensure ABI compatibility and CUDA compilation
 echo "Reinstalling nvidia-curobo to ensure ABI compatibility..."
 uv pip uninstall nvidia-curobo || true
-uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/NVlabs/curobo.git"
+uv pip install --no-build-isolation --no-cache-dir "git+https://github.com/NVlabs/curobo.git" "numpy<2.0.0"
 
 # Set up environment variables
 export ROBOTWIN_DOWNLOAD_TEXTURES=false
