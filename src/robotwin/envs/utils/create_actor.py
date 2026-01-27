@@ -538,7 +538,10 @@ def create_actor(
         with open(json_file_path, "r") as file:
             model_data = json.load(file)
         scale = model_data["scale"]
-    except:
+    except Exception as e:
+        print(f"Error loading model data from {json_file_path}: {e}")
+        import traceback
+        traceback.print_exc()
         model_data = None
 
     builder = scene.create_actor_builder()

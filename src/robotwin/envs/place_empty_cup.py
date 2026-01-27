@@ -2,13 +2,20 @@
 from ._base_task import Base_Task
 from .utils import *
 
+from .utils.create_actor import get_glb_or_obj_file
 import glob
 import numpy as np
+import json
+from pathlib import Path
+import os
 
 class place_empty_cup(Base_Task):
 
     def setup_demo(self, **kwags):
         super()._init_task_env_(**kwags)
+        if not hasattr(self, "info"):
+            self.info = {}
+        self.info["target_object_ids"] = [self.cup.actor.per_scene_id, self.coaster.actor.per_scene_id]
 
     cup_objects = [
         "021_cup",
@@ -19,17 +26,44 @@ class place_empty_cup(Base_Task):
     def load_actors(self):
         
         def get_available_model_ids(modelname):
-            asset_path = os.path.join(ASSETS_PATH, "objects", modelname)
-            json_files = glob.glob(os.path.join(asset_path, "model_data*.json"))
+            """Get available model IDs that have both JSON config and mesh files."""
+            asset_path = Path(ASSETS_PATH) / "objects" / modelname
+            json_files = glob.glob(str(asset_path / "model_data*.json"))
 
             available_ids = []
             for file in json_files:
                 base = os.path.basename(file)
                 try:
                     idx = int(base.replace("model_data", "").replace(".json", ""))
-                    available_ids.append(idx)
                 except ValueError:
                     continue
+                
+                # Check collision/visual file existence
+                collision_dir = asset_path / "collision"
+                visual_dir = asset_path / "visual"
+                
+                if collision_dir.exists():
+                    collision_file = get_glb_or_obj_file(collision_dir, idx)
+                else:
+                    collision_file = get_glb_or_obj_file(asset_path, idx)
+                
+                if visual_dir.exists():
+                    visual_file = get_glb_or_obj_file(visual_dir, idx)
+                else:
+                    visual_file = get_glb_or_obj_file(asset_path, idx)
+                
+                # Verify JSON content
+                if collision_file.exists() and visual_file.exists():
+                    try:
+                        with open(file, 'r') as f:
+                            data = json.load(f)
+                            # Basic check for keys used in task
+                            # scale is critical. contact_points_pose used for grasp.
+                            if 'scale' in data and 'contact_points_pose' in data:
+                                available_ids.append(idx)
+                    except:
+                        pass
+            
             return available_ids
         
         
@@ -48,12 +82,18 @@ class place_empty_cup(Base_Task):
             "106_skillet",
         ]
         
-        self.model_name = np.random.choice(np.array(cup_objects))
-        available_model_ids = get_available_model_ids(self.model_name)
-        self.object_id = np.random.choice(available_model_ids)
-        if not available_model_ids:
-            raise ValueError(f"No available model_data.json files found for {self.model_name}")
         
+        # Retry up to 10 times to find a valid model
+        for _ in range(10):
+            self.model_name = np.random.choice(np.array(cup_objects))
+            available_model_ids = get_available_model_ids(self.model_name)
+            if available_model_ids:
+                self.object_id = np.random.choice(available_model_ids)
+                break
+        else:
+            # If still empty, raise error with details
+            raise ValueError(f"No valid assets found for any checked models in {cup_objects}")
+
         tag = 0
         cup_xlim = [[0.15, 0.3], [-0.3, -0.15]]
         coaster_lim = [[-0.05, 0.1], [-0.1, 0.05]]

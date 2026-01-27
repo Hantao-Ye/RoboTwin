@@ -20,6 +20,11 @@ class Robot:
         ta.setup_logging("CRITICAL")  # hide logging
         self._init_robot_(scene, need_topp, **kwargs)
 
+    def get_links(self):
+        if self.is_dual_arm:
+            return self.left_entity.get_links()
+        return self.left_entity.get_links() + self.right_entity.get_links()
+
     def _init_robot_(self, scene, need_topp=False, **kwargs):
         # self.dual_arm = dual_arm_tag
         # self.plan_success = True

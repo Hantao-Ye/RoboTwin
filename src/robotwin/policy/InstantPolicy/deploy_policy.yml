@@ -1,0 +1,14 @@
+# Basic experiment configuration (keep unchanged)
+policy_name: policy.InstantPolicy.deploy_policy
+task_name: null
+task_config: null
+ckpt_setting: null
+seed: null
+instruction_type: unseen
+
+# InstantPolicy specific configuration
+checkpoint_path: "/home/hantao/playground/RoboTwin/checkpoints"
+num_demos: 2
+num_waypoints: 10
+num_diffusion_iters: 8
+device: "cuda"

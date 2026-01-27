@@ -58,6 +58,7 @@ dependencies = [
     "torch-geometric>=2.7.0",
     "ip",
     "warp-lang",
+    "rerun-sdk>=0.23.1",
 ]
 
 [tool.hatch.build.targets.wheel]

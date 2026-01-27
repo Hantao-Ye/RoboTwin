@@ -11,7 +11,7 @@ import yaml
 from robotwin.description.utils.generate_episode_instructions import (
     generate_episode_descriptions,
 )
-from robotwin.envs._GLOBAL_CONFIGS import CONFIGS_PATH
+from robotwin.envs._GLOBAL_CONFIGS import ASSETS_PATH, CONFIGS_PATH
 from robotwin.envs.utils.create_actor import UnStableError
 
 current_file_path = os.path.abspath(__file__)
@@ -77,7 +77,13 @@ def main(usr_args):
 
     get_model = eval_function_decorator(policy_name, "get_model")
 
-    with open(f"./task_config/{task_config}.yml", "r", encoding="utf-8") as f:
+    # Handle task_config - either as absolute path or config name
+    if task_config.endswith('.yml') and os.path.exists(task_config):
+        config_path = task_config
+    else:
+        config_path = os.path.join(CONFIGS_PATH, f"{task_config}.yml")
+
+    with open(config_path, "r", encoding="utf-8") as f:
         args = yaml.load(f.read(), Loader=yaml.FullLoader)
 
     args['task_name'] = task_name
@@ -94,7 +100,14 @@ def main(usr_args):
         robot_file = _embodiment_types[embodiment_type]["file_path"]
         if robot_file is None:
             raise "No embodiment files"
-        return robot_file
+        
+        # Handle legacy paths starting with assets/ or ./assets/
+        if robot_file.startswith("./assets/"):
+            robot_file = robot_file[9:]
+        elif robot_file.startswith("assets/"):
+            robot_file = robot_file[7:]
+            
+        return os.path.join(ASSETS_PATH, robot_file)
 
     with open(CONFIGS_PATH + "_camera_config.yml", "r", encoding="utf-8") as f:
         _camera_config = yaml.load(f.read(), Loader=yaml.FullLoader)
@@ -161,7 +174,7 @@ def main(usr_args):
 
     st_seed = 100000 * (1 + seed)
     suc_nums = []
-    test_num = 100
+    test_num = 1
     topk = 1
 
     model = get_model(usr_args)
@@ -217,7 +230,9 @@ def eval_policy(task_name,
 
     args["eval_mode"] = True
 
+
     while succ_seed < test_num:
+        print(f"Progress: [{succ_seed}/{test_num}] | Testing Seed: {now_seed}")
         render_freq = args["render_freq"]
         args["render_freq"] = 0
 
@@ -227,6 +242,7 @@ def eval_policy(task_name,
                 episode_info = TASK_ENV.play_once()
                 TASK_ENV.close_env()
             except UnStableError as e:
+                print(f"  [Retry] UnStableError on seed {now_seed}: {e}")
                 # print(" -------------")
                 # print("Error: ", e)
                 # print(" -------------")
@@ -235,10 +251,12 @@ def eval_policy(task_name,
                 args["render_freq"] = render_freq
                 continue
             except Exception as e:
-                # stack_trace = traceback.format_exc()
-                # print(" -------------")
-                # print("Error: ", e)
-                # print(" -------------")
+                import traceback
+                stack_trace = traceback.format_exc()
+                print(" -------------")
+                print("Error: ", e)
+                print(stack_trace)
+                print(" -------------")
                 TASK_ENV.close_env()
                 now_seed += 1
                 args["render_freq"] = render_freq
@@ -289,6 +307,10 @@ def eval_policy(task_name,
                 stdin=subprocess.PIPE,
             )
             TASK_ENV._set_eval_video_ffmpeg(ffmpeg)
+
+        # Update debugger output dir to match eval_video_path if available
+        if isinstance(model, dict) and 'debugger' in model and model['debugger'] is not None and TASK_ENV.eval_video_path:
+             model['debugger'].output_dir = Path(TASK_ENV.eval_video_path)
 
         succ = False
         reset_func(model)

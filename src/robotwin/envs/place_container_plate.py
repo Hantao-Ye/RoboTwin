@@ -1,50 +1,79 @@
 
 from ._base_task import Base_Task
 from .utils import *
+from .utils.create_actor import get_glb_or_obj_file
 import glob
 import numpy as np
+import json
+from pathlib import Path
 
 class place_container_plate(Base_Task):
 
     def setup_demo(self, **kwags):
         super()._init_task_env_(**kwags)
+        self.info["target_object_ids"] = [self.container.actor.per_scene_id, self.plate.actor.per_scene_id]
 
     def load_actors(self):
         
         def get_available_model_ids(modelname):
-            asset_path = os.path.join(ASSETS_PATH, "objects", modelname)
-            json_files = glob.glob(os.path.join(asset_path, "model_data*.json"))
+            """Get available model IDs that have both JSON config and mesh files."""
+            asset_path = Path(ASSETS_PATH) / "objects" / modelname
+            json_files = glob.glob(str(asset_path / "model_data*.json"))
 
             available_ids = []
             for file in json_files:
                 base = os.path.basename(file)
                 try:
                     idx = int(base.replace("model_data", "").replace(".json", ""))
-                    available_ids.append(idx)
                 except ValueError:
                     continue
+                
+                # Verify collision and visual files exist (same logic as create_actor)
+                collision_dir = asset_path / "collision"
+                visual_dir = asset_path / "visual"
+                
+                if collision_dir.exists():
+                    collision_file = get_glb_or_obj_file(collision_dir, idx)
+                else:
+                    collision_file = get_glb_or_obj_file(asset_path, idx)
+                
+                if visual_dir.exists():
+                    visual_file = get_glb_or_obj_file(visual_dir, idx)
+                else:
+                    visual_file = get_glb_or_obj_file(asset_path, idx)
+                
+                # Also verify JSON has valid data (scale)
+                if collision_file.exists() and visual_file.exists():
+                    try:
+                        with open(file, 'r') as f:
+                            data = json.load(f)
+                            if 'scale' in data and 'contact_points_pose' in data:
+                                available_ids.append(idx)
+                    except:
+                        pass
+            
             return available_ids
         
         bottle_objects = [
             "001_bottle",
-            "028_roll-paper",
-            "025_chips-tub",
-            "029_olive-oil",
-            "031_jam-jar",
-            "038_milk-box",
-            "049_shampoo",
-            "064_msg",
-            "065_soy-sauce",
-            "066_vinegar",
+            # "028_roll-paper", # Missing contact_points_pose
+            # "025_chips-tub", # Missing contact_points_pose
+            # "029_olive-oil", # Missing contact_points_pose
+            # "031_jam-jar", # Missing keys
+            # "038_milk-box", # Missing contact_points_pose
+            # "049_shampoo",  # Missing collision/visual files
+            # "064_msg", # Missing contact_points_pose
+            # "065_soy-sauce", # Missing keys
+            # "066_vinegar", # Missing contact_points_pose
             "068_boxdrink",
             "071_can",
-            "080_pillbottle",
+            # "080_pillbottle",  # Missing collision/visual files
             "095_glue",
             "101_milk-tea",
             "105_sauce-can",
-            "108_block",
-            "109_hyfrating-oil",
-            "114_bottle",
+            # "108_block", # Missing contact_points_pose
+            # "109_hyfrating-oil",  # Directory missing
+            # "114_bottle",  # Missing collision/visual files
             "115_perfume",
         ]
         
@@ -57,7 +86,7 @@ class place_container_plate(Base_Task):
             "008_tray",
             # "019_coaster",
             # "076_breadbasket",
-            "104_board",
+            # "104_board",
             "106_skillet",
         ]
         
@@ -129,6 +158,7 @@ class place_container_plate(Base_Task):
             ylim=[-0.2, 0.05],
             rotate_rand=False,
             qpos=[0.5, 0.5, 0.5, 0.5],
+            zlim=[0.76, 0.76],
         )
         while abs(container_pose.p[0]) < 0.2:
             container_pose = rand_pose(
@@ -136,13 +166,14 @@ class place_container_plate(Base_Task):
                 ylim=[-0.2, 0.05],
                 rotate_rand=False,
                 qpos=[0.5, 0.5, 0.5, 0.5],
+                zlim=[0.76, 0.76],
             )
         
         self.actor_name = np.random.choice(np.array(bottle_objects))
         available_model_ids = get_available_model_ids(self.actor_name)
-        self.container_id = np.random.choice(available_model_ids)
         if not available_model_ids:
-            raise ValueError(f"No available model_data.json files found for {self.container_id}")
+            raise ValueError(f"No available model files found for {self.actor_name}")
+        self.container_id = np.random.choice(available_model_ids)
 
         self.container = create_actor(
             self,
@@ -151,6 +182,8 @@ class place_container_plate(Base_Task):
             model_id=self.container_id,
             convex=True,
         )
+        if self.container is None:
+            raise ValueError(f"Failed to create container actor: {self.actor_name} model_id={self.container_id}")
 
         xlim = [-0.25, -0.15] if self.container.get_pose().p[0] > 0 else [0.15, 0.25]
         pose = rand_pose(
@@ -163,9 +196,9 @@ class place_container_plate(Base_Task):
         
         self.plate_name = np.random.choice(np.array(plate_objects))
         available_model_ids = get_available_model_ids(self.plate_name)
-        self.plate_id = np.random.choice(available_model_ids)
         if not available_model_ids:
-            raise ValueError(f"No available model_data.json files found for {self.plate_id}")
+            raise ValueError(f"No available model files found for {self.plate_name}")
+        self.plate_id = np.random.choice(available_model_ids)
         
         self.plate = create_actor(
             self,
@@ -174,6 +207,8 @@ class place_container_plate(Base_Task):
             model_id=self.plate_id,
             convex=True,
         )
+        if self.plate is None:
+            raise ValueError(f"Failed to create plate actor: {self.plate_name} model_id={self.plate_id}")
         
         self.container.set_mass(0.05)
         self.plate.set_mass(0.05)
@@ -198,12 +233,17 @@ class place_container_plate(Base_Task):
         self.move(self.move_by_displacement(arm_tag, z=0.1, move_axis="arm"))
 
         # Place the container onto the plate's functional point
+        # Check if container has functional point 0
+        fp_id = 0
+        if self.container.get_functional_point(0) is None:
+            fp_id = None
+
         self.move(
             self.place_actor(
                 self.container,
                 target_pose=self.plate.get_functional_point(0),
                 arm_tag=arm_tag,
-                functional_point_id=0,
+                functional_point_id=fp_id,
                 pre_dis=0.12,
                 dis=0.03,
             ))

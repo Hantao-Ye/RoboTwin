@@ -11,6 +11,7 @@ import gymnasium as gym
 import imageio
 import numpy as np
 import sapien.core as sapien
+import sapien.physx as physx
 import toppra as ta
 import torch
 import transforms3d as t3d
@@ -172,36 +173,43 @@ class Base_Task(gym.Env):
         self.stage_success_tag = False
 
     def check_stable(self):
-        actors_list, actors_pose_list = [], []
-        for actor in self.scene.get_all_actors():
-            actors_list.append(actor)
-
-        def get_sim(p1, p2):
-            return np.abs(cal_quat_dis(p1.q, p2.q) * 180)
-
-        is_stable, unstable_list = True, []
-
-        def check(times):
-            nonlocal self, is_stable, actors_list, actors_pose_list
-            for _ in range(times):
-                self.scene.step()
-                for idx, actor in enumerate(actors_list):
-                    actors_pose_list[idx].append(actor.get_pose())
-
-            for idx, actor in enumerate(actors_list):
-                final_pose = actors_pose_list[idx][-1]
-                for pose in actors_pose_list[idx][-200:]:
-                    if get_sim(final_pose, pose) > 3.0:
-                        is_stable = False
-                        unstable_list.append(actor.get_name())
-                        break
-
-        is_stable = True
+        # Warmup
         for _ in range(2000):
             self.scene.step()
-        for idx, actor in enumerate(actors_list):
-            actors_pose_list.append([actor.get_pose()])
-        check(500)
+
+        is_stable = True
+        unstable_list = []
+        
+        # Check stability over a window to catch oscillations
+        check_window = 100
+        linear_thresh = 5e-3 # 5mm/s
+        angular_thresh = 5e-2 # ~3 deg/s
+        
+        actors = self.scene.get_all_actors()
+        
+        for _ in range(check_window):
+            self.scene.step()
+            for actor in actors:
+                # Check if actor is dynamic
+                # In Sapien 3, actors are entities. We check for RigidDynamicComponent.
+                # If it doesn't have one (e.g. static or purely visual), we skip.
+                rigid_component = actor.find_component_by_type(physx.PhysxRigidDynamicComponent)
+                if rigid_component is None:
+                    continue
+                    
+                v = np.linalg.norm(rigid_component.get_linear_velocity())
+                w = np.linalg.norm(rigid_component.get_angular_velocity())
+                
+                if v > linear_thresh or w > angular_thresh:
+                    # Initial check passed? No, if any frame is bad, it's bad.
+                    # But we want to report the actor name only once.
+                    name = actor.get_name()
+                    if name not in unstable_list:
+                        is_stable = False
+                        unstable_list.append(name)
+                        # Optional: Print detailed debug info only once
+                        # print(f"Unstable: {name} v={v:.4f} w={w:.4f}")
+        
         return is_stable, unstable_list
 
     def play_once(self):
@@ -227,7 +235,7 @@ class Base_Task(gym.Env):
         sapien.render.set_camera_shader_dir("rt")
         sapien.render.set_ray_tracing_samples_per_pixel(32)
         sapien.render.set_ray_tracing_path_depth(8)
-        sapien.render.set_ray_tracing_denoiser("optix")
+        sapien.render.set_ray_tracing_denoiser("oidn")
 
         # declare sapien scene
         scene_config = sapien.SceneConfig()
@@ -510,6 +518,13 @@ class Base_Task(gym.Env):
         # pointcloud
         if self.data_type.get("pointcloud", False):
             pkl_dic["pointcloud"] = self.cameras.get_pcd(self.data_type.get("conbine", False))
+
+        # Include target_object_ids if set by task
+        if "target_object_ids" in self.info:
+            pkl_dic["target_object_ids"] = self.info["target_object_ids"]
+        else:
+            print(f"[DEBUG] target_object_ids NOT in self.info. Keys: {list(self.info.keys())}")
+            pass
 
         self.now_obs = deepcopy(pkl_dic)
         return pkl_dic
@@ -926,10 +941,10 @@ class Base_Task(gym.Env):
             if actions_by_arm2 is None:
                 active_arm = actions_by_arm1[0]
                 self.active_arm_tag = str(active_arm)
-                # if active_arm == "left":
-                self.robot.set_arm_visibility("right", False)
-                # else:
-                self.robot.set_arm_visibility("left", False)
+                if active_arm == "left":
+                    self.robot.set_arm_visibility("right", False)
+                else:
+                    self.robot.set_arm_visibility("left", False)
                 self.has_set_visibility = True
 
         def get_actions(actions, arm_tag: ArmTag) -> list[Action]:
@@ -1187,11 +1202,16 @@ class Base_Task(gym.Env):
                 res_pre_top_down_pose = pre_pose
                 res_top_down_pose = pose
                 dis_top_down = now_dis_top_down
+                # Optimization: Return immediately if we found a good enough grasp
+                if dis_top_down < 0.15:
+                    return res_pre_top_down_pose, res_top_down_pose
 
             if res_pre_side_pose is None or now_dis_side < dis_side:
                 res_pre_side_pose = pre_pose
                 res_side_pose = pose
                 dis_side = now_dis_side
+                if dis_side < 0.15:
+                     return res_pre_side_pose, res_side_pose
 
             now_dis = 0.7 * now_dis_top_down + 0.3 * now_dis_side
             if res_pre_pose is None or now_dis < dis:
@@ -1241,6 +1261,9 @@ class Base_Task(gym.Env):
             target_dis=grasp_dis,
             contact_point_id=contact_point_id,
         )
+        if pre_grasp_pose is None or grasp_pose is None:
+            raise UnStableError("Grasp planning failed (unreachable or collision)")
+
         if pre_grasp_pose == grasp_pose:
             return arm_tag, [
                 Action(arm_tag, "move", target_pose=pre_grasp_pose),
@@ -1523,7 +1546,30 @@ class Base_Task(gym.Env):
 
         eval_video_freq = 1  # fixed
         if (self.eval_video_path is not None and self.take_action_cnt % eval_video_freq == 0):
-            self.eval_video_ffmpeg.stdin.write(self.now_obs["observation"]["head_camera"]["rgb"].tobytes())
+            # Try to get RGB from head_camera, fallback to others if missing
+            obs_dict = self.now_obs.get("observation", {})
+            rgb_data = None
+            
+            # Prioritize head_camera
+            if "head_camera" in obs_dict:
+                rgb_data = obs_dict["head_camera"]["rgb"]
+            else:
+                # Fallback to any available camera starting with 'cam_' or 'head_'
+                # Prefer cam_right or cam_left
+                for cam_name in ["cam_right", "cam_left", "right_camera", "left_camera"]:
+                    if cam_name in obs_dict:
+                        rgb_data = obs_dict[cam_name]["rgb"]
+                        break
+                
+                # If still None, take first available
+                if rgb_data is None:
+                    for k, v in obs_dict.items():
+                        if "rgb" in v:
+                            rgb_data = v["rgb"]
+                            break
+            
+            if rgb_data is not None:
+                self.eval_video_ffmpeg.stdin.write(rgb_data.tobytes())
 
         self.take_action_cnt += 1
         print(f"step: \033[92m{self.take_action_cnt} / {self.step_lim}\033[0m", end="\r")
